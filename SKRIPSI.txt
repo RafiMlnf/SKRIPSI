@@ -1,0 +1,468 @@
+PROPOSAL PENELITIAN
+
+ANALISIS SENTIMEN PENDENGAR LAGU “ARTERI” OLEH .FEAST MENGGUNAKAN ALGORITMA SUPPORT VECTOR MACHINE
+	(SVM)
+Diajukan untuk memenuhi sebagian
+persyaratan menyelesaikan mata kuliah
+Proposal Penelitian pada Program Studi Teknik Informatika
+
+
+Disusun Oleh
+Rafi Maulana Firdaus
+312210382
+
+PROGRAM STUDI TEKNIK INFORMATIKA
+FAKULTAS TEKNIK
+UNIVERSITAS PELITA BANGSA
+BEKASI
+2026  
+LEMBAR PERSETUJUAN PROPOSAL PENELITIAN
+
+ANALISIS SENTIMEN PENDENGAR LAGU “ARTERI” OLEH .FEAST MENGGUNAKAN ALGORITMA SUPPORT VECTOR MACHINE
+	(SVM)
+Diajukan untuk memenuhi syarat kelulusan pada
+Program Studi Teknik Informatika
+Universitas Pelita Bangsa
+
+Disusun oleh:
+Rafi Maulana Firdaus
+312210382
+
+
+Telah diperiksa dan disahkan
+Pada tanggal: ..............................
+Dosen Pembimbing 1
+
+
+Abdul Halim Anshor S.Kom., M.Kom.
+NIDN. 0421117604	Dosen Pembimbing 2
+
+
+Karina Imelda S.Kom., M.Kom.
+NIDN. 0417079403
+
+
+Mengetahui,
+ 
+LEMBAR PENGESAHAN PROPOSAL PENELITIAN
+
+ANALISIS SENTIMEN PENDENGAR LAGU “ARTERI” OLEH .FEAST MENGGUNAKAN ALGORITMA SUPPORT VECTOR MACHINE
+	(SVM)
+
+Disusun oleh
+Rafi Maulana Firdaus
+312210382
+
+Telah dipertahankan didepan Dewan Penguji
+Pada tanggal: ..............................
+
+Dosen Penguji
+
+
+Nama... Gelar...
+NIDN. ...
+
+
+Mengetahui,
+Ketua Program Studi Teknik Informatika
+
+
+Dr. Ir. Ananto Tri Sasongko, M.Sc.
+NIDN. 0410056601
+ 
+PERNYATAAN
+	Dengan ini saya menyatakan bahwa proposal penelitian yang berjudul “Analisis Sentimen Pendengar Lagu Arteri oleh .Feast menggunakan algoritma Support Vector Machine (SVM) adalah hasil karya yang saya buat sendiri dan belum pernah diajukan untuk mendapatkan gelar akademik di institusi pendidikan lain. Saya menjamin bahwa semua data, analisis teknis, serta penerapan model yang terdapat dalam dokumen ini dilakukan secara mandiri dan sesuai dengan aturan ilmiah yang berlaku. Setiap bagian yang mengutip atau merujuk pada sumber lain telah disertakan dengan tepat sesuai dengan standar akademik. Selain itu, saya secara tegas menyatakan bahwa lagu “Arteri” yang menjadi objek penelitian ini adalah karya cipta milik grup musik .Feast, dan peran saya dalam penelitian ini hanya sebagai peneliti yang menggunakan lagu tersebut sebagai kasus studi untuk analisis komputasional, tanpa niat untuk mengklaim hak cipta atas lagu tersebut. Dengan ini saya menyampaikan pernyataan ini dengan tanggung jawab penuh, dan saya bersedia menerima hukuman akademik yang berlaku jika suatu saat ditemukan adanya tindakan plagiarisme dalam dokumen ini.
+
+	Bekasi, 2 Januari 2026
+	Penulis
+
+	
+	Rafi Maulana Firdaus
+	NIM: 312210382
+
+ 
+KATA PENGANTAR
+Penulis berterima kasih kepada Allah SWT atas rahmat dan karunia-Nya yang telah memungkinkan penulis menyelesaikan proposal penelitian berjudul "Analisis Sentimen Pendengar Lagu Arteri oleh .Feast menggunakan algoritma SVM. Fakultas Teknik Universitas Pelita Bangsa membutuhkan Proposal Penelitian untuk menyelesaikan mata kuliah Proposal Penelitian. Tujuan dari tulisan ini adalah untuk mengevaluasi bagaimana algoritma machine learning berfungsi dalam klasifikasi sentimen pada data teks tidak terstruktur yang diperoleh dari platform digital YouTube.
+Penulis menyadari dalam proses penyusunan proposal ini bahwa keberhasilan ini tidak dapat dicapai tanpa bantuan, bimbingan, dan dukungan dari berbagai pihak. Oleh karena itu, penulis ingin mengucapkan terima kasih yang sebesar-besarnya kepada:
+1.	Rektor Universitas Pelita Bangsa Bapak Hamzah Muhammad Mardi Putra, S.K.M., M.M., D.B.A. 
+2.	Ibu Putri Anggun Sari, S.Pt., M.Si. selaku Dekan Fakultas Teknik Universitas Pelita Bangsa 
+3.	Ketua Program Studi Teknik Informatika S-1 Bapak Dr. Ir. Ananto Tri Sasongko, M.Sc. 
+4.	Bapak Abdul Halim Anshor, S. Kom., M. Kom. selaku Dosen Pembimbing I dan senantiasa ikhlas memberikan bimbingan, dan masukan.
+5.	Ibu Karina Imelda, S. Kom., M. Kom. selaku Dosen Pembimbing II dan senantiasa ikhlas dijadikan bertanya untuk berbagi ilmu dan saran
+6.	Semua keluarga, teman, yang telah membantu penulis dalam menyusun Proposal Penelitian ini.
+ 
+MOTTO DAN PERSEMBAHAN
+“Life is a vast canvas, meaning is found the colors we dare to paint”
+
+Skripsi ini adalah bukti dari upaya dan doa yang tak henti-hentinya. Saya menyampaikan karya kecil ini dengan rasa terima kasih:
+1.	Allah SWT, Sang Pemilik Semesta, atas segala kekuatan untuk melewati fase quarter life crisis.
+2.	Bapak dan Ibu, sumber dataset kasih sayang yang tak pernah imbalance. Terima kasih atas doa dan keringat kalian, ini langkah awal saya untuk membahagiakan kalian.
+3.	Diri Sendiri, terima kasih karena perlahan menaklukan fase ini dan tidak menyerah. You did well.
+4.	Dosen Pembimbing, yang telah menjadi loss function terbaik dalam mengoreksi arah penelitian saya menuju konvergensi kelulusan.
+5.	“Arteri" oleh .Feast, yang menjadi objek riset sekaligus teman setia di malam-malam panjang penyusunan skripsi.
+6.	Teman-teman Tadika Teknik Informatika 2022 A4 atas diskusi, dan kebersamaannya. Sukses untuk kita semua.
+ 
+ABSTRAK
+Lagu "Arteri" dari grup musik .Feast telah berfungsi sebagai cara untuk memberikan inspirasi emosional kepada pendengar dalam menghadapi fenomena quarter life crisis, dan telah menghasilkan ribuan tanggapan publik pada platform YouTube. Namun, metode analisis konvensional menghadapi tantangan untuk mengidentifikasi pola sentimen dengan benar karena banyaknya data tekstual yang tidak terstruktur dan penggunaan bahasa Indonesia informal, slang, dan sarkasme. Tujuan penelitian ini adalah untuk mengimplementasikan dan mengevaluasi kinerja algoritma pembelajaran mesin, SVM, dalam mengklasifikasikan polaritas sentimen pendengar menjadi kategori positif, negatif, dan netral. SVM dipilih sebagai metode utama karena kemampuannya yang handal (robust) untuk menangani data teks berukuran besar dan menemukan hyperplane pemisah terbaik untuk dataset berukuran terbatas. Studi ini menggunakan pembobotan kata TF-IDF sebagai ekstraksi fitur dan berkonsentrasi pada mengukur efektivitas model secara kuantitatif menggunakan metrik evaluasi Akurasi, Presisi, Recall, dan Skor F1. Hasil penelitian ini diharapkan dapat memberikan kontribusi empiris untuk pengembangan proses Natural Language Processing (NLP) untuk teks non-standar serta menggambarkan tren persepsi audiens di industri musik digital.
+Kata Kunci: Analisis Sentimen, Machine Learning, Support Vector Machine (SVM), TF-IDF, YouTube, .Feast.
+ 
+ABSTRACT
+ "The song 'Arteri' by the music group .Feast serves as a medium of emotional inspiration for listeners navigating the 'quarter-life crisis' phenomenon, generating thousands of public responses on the YouTube platform. However, conventional analysis methods struggle to accurately identify sentiment patterns due to the high volume of unstructured textual data and the prevalence of informal Indonesian, slang, and sarcasm. This research aims to implement and evaluate the performance of the SVM machine learning algorithm in classifying listener sentiment polarity into positive, negative, and neutral categories. SVM was selected as the primary method due to its robustness in handling high-dimensional text data and its ability to determine the optimal separating hyperplane for limited datasets. This study utilizes TF-IDF weighting for feature extraction and focuses on quantitatively measuring model effectiveness using Accuracy, Precision, Recall, and F1-Score metrics. The results of this research are expected to provide empirical contributions to the development of Natural Language Processing (NLP) for non-standard text, as well as to illustrate audience perception trends within the digital music industry."
+Keywords: Sentiment Analysis, Deep Learning, Support Vector Machine (SVM), Natural Language Processing (NLP), YouTube, .Feast. 
+DAFTAR ISI
+
+PROPOSAL PENELITIAN	i
+LEMBAR PERSETUJUAN PROPOSAL PENELITIAN	i
+LEMBAR PENGESAHAN PROPOSAL PENELITIAN	ii
+PERNYATAAN	iii
+KATA PENGANTAR	iv
+MOTTO DAN PERSEMBAHAN	v
+ABSTRAK	vi
+ABSTRACT	vii
+DAFTAR ISI	viii
+DAFTAR GAMBAR	x
+DAFTAR TABEL	xi
+BAB I PENDAHULUAN	1
+1.1	Latar Belakang	1
+1.2	Identifikasi Masalah	3
+1.3	Batasan Masalah	4
+1.4	Rumusan Masalah	4
+1.5	Tujuan Penelitian	5
+1.6	Manfaat Penelitian	5
+1.6.1	Manfaat Teoritis	5
+1.6.2	Manfaat Praktis	6
+1.7	Sistematika Penulisan	6
+BAB II TINJAUAN PUSTAKA DAN LANDASAN TEORI	8
+2.1	Tinjauan Pustaka	8
+2.1.1	Penelitian Terdahulu	9
+2.2	Landasan Teori	14
+2.2.1	Musik	14
+2.2.2	YouTube	14
+2.2.3	Profil .Feast	15
+2.2.4	Analisis Sentimen	15
+2.2.5	Natural Language Processing (NLP)	15
+2.2.6	Text Preprocessing	16
+2.2.7	Term Frequency-Inverse Document Frequency (TF-IDF)	17
+2.2.8	Support Vector Machine (SVM)	17
+2.2.9	Metrik Evaluasi Kinerja Model	18
+2.3	Kerangka Berpikir	19
+BAB III METODE PENELITIAN	21
+3.1	Jenis dan Pendekatan Penelitian	21
+3.2	Tahapan Penelitian	21
+3.3	Desain Penelitian	22
+3.4	Variabel Penelitian	23
+3.5	Sumber dan Jenis Data	24
+3.6	Teknik Pengumpulan Data	24
+3.7	Instrumen Penelitian	25
+3.6.1	Perangkat Keras (Hardware)	25
+3.6.2	Perangkat Lunak (Software)	26
+3.8	Teknik Analisis Data	26
+3.7.1	Text Processing	26
+3.7.2	Pembobotan Kata (Feature Extraction)	27
+3.7.3	Pembagian Data (Data Splitting)	27
+3.7.4	Klasifikasi dengan Support Vector Machine (SVM)	27
+3.7.5	Evaluasi Model	28
+DAFTAR PUSTAKA	29
+
+
+ 
+DAFTAR GAMBAR
+Gambar 3. 1 Alur Tahapan Penelitain	22
+ 
+DAFTAR TABEL
+Tabel 2. 1 Penelitian Terdahulu	9
+Tabel 2. 2 Kerangka Berpikir	20
+ 
+
+ 
+BAB I
+PENDAHULUAN
+
+1.1	Latar Belakang
+Musik adalah fenomena universal yang menggabungkan harmoni, ritme, dan melodi sebagai media komunikasi emosional yang melampaui batasan bahasa verbal. Musik tidak hanya berfungsi sebagai hiburan, melainkan juga memiliki nilai terapeutik yang signifikan. Sebagai bentuk komunikasi non-verbal, musik mampu menyampaikan pesan emosional yang tidak dapat diungkapkan secara lisan [1]. Sebagai salah satu cabang kesenian, musik tidak hanya berfungsi sebagai sarana hiburan, tetapi juga menjadi instrumen untuk mendokumentasikan realitas sosial dan pengalaman psikologis manusia secara mendalam. musik, tidak hanya menjadi sarana hiburan semata, melainkan berfungsi sebagai media ekspresi, representasi identitas, dan bahkan alat komunikasi yang bersifat transcultural [2]. Dalam perkembangannya di Indonesia, musik indie telah menjadi ruang ekspresi paling otentik bagi generasi muda untuk mengartikulasikan kegelisahan eksistensial, kegagalan personal, hingga pencarian makna hidup. Musik indie adalah musik yang merepresentasikan kebebasan berekspresi dalam berkarya yang didukung dengan semangat kemandirian [3].  Karakteristik utama dari aliran musik ini adalah kemampuannya dalam menyajikan narasi yang jujur dan mentah, menjadikannya representasi langsung dari berbagai dinamika internal pendengarnya.
+Salah satu kelompok musik yang sering menyuarakan narasi dan cerita adalah .Feast Melalui lagu "Arteri", yang termasuk dalam album Membangun & Menghancurkan, grup ini menegaskan posisinya dalam mengangkat masalah emosional dalam musik populer Indonesia. cerita-cerita yang ada di lagu-lagu Feast adalah cerita-cerita yang ada di masyarakat [4]. Secara lirik, "Arteri" yang ditulis oleh Laleilmanino dan Dicky Renanda adalah refleksi dari pengalaman pribadi dengan krisis kehidupan pada usia dua puluh tahun. Lagu ini menggunakan metafora "Arteri" yang tersumbat untuk menggambarkan kesulitan emosional yang dihadapi seseorang saat mencoba beralih dari masa lalu yang penuh penyesalan. Storyline yang sangat pribadi tentang kebingungan identitas dan upaya untuk melepaskan trauma ini meninggalkan kesan yang kuat pada pendengar.
+Sebagian besar respons publik terhadap lagu ini didokumentasikan secara eksplisit melalui platform YouTube. Pendengar dapat berinteraksi dan berbicara tentang makna pribadi mereka tentang pesan moral lagu melalui fitur kolom komentar YouTube, yang merupakan platform utama penyedia video musik. sebagai salah satu media sosial yang paling banyak diakses di Indonesia, berfungsi sebagai ruang terbuka di mana masyarakat dapat mengungkapkan pandangan mereka secara bebas [5]. Ribuan komentar dinamis dari kolom komentar YouTube untuk lagu "Arteri" menghasilkan jumlah data tekstual yang sangat besar. Untuk analisis lebih lanjut, kumpulan komentar ini merupakan representasi empiris nyata dari persepsi dan interpretasi publik.
+Penelitian ini menggunakan metode Support Vector Machine (SVM) untuk menyelesaikan masalah pengolahan data tidak terstruktur tersebut. SVM adalah algoritma pembelajaran mesin yang terbukti tangguh (robust) dalam menangani klasifikasi teks yang luas dengan jumlah fitur (kata unik) yang jauh lebih besar daripada jumlah sampel data. performa klasifikasi yang robust, seringkali menghasilkan nilai error yang rendah pada data pelatihan dan pengujian bila disetel dengan parameter yang optimal [6]. Karakteristik dataset penelitian yang berskala terbatas (sekitar 1000-an) adalah dasar pemilihan algoritma ini.
+Secara teknis, SVM bekerja dengan prinsip mencari hyperplane pemisah terbaik (best separating hyperplane), yang memaksimalkan jarak antara kelas sentimen. Metode ini mencoba mencari garis batas terbaik yang disebut hyperplane, yang bisa memisahkan data tersebut dengan jarak terjauh dari titik-titik terdekat pada setiap kelompok [7]. Kemampuan ini sangat penting untuk mengatasi tantangan ambiguitas bahasa di kolom komentar YouTube yang penuh dengan noise linguistik seperti sarkasme dan bahasa gaul. Meskipun struktur kalimatnya tidak baku, SVM dengan bantuan ekstraksi fitur TF-IDF mampu memetakan pola kata ke dalam ruang vektor dan menentukan batas keputusan yang jelas antara sentimen positif, negatif, dan netral. Ini berbeda dengan metode berbasis aturan (rule-based) yang kaku. metode yang umumnya dipakai untuk menentukan hubungan kata (term) terhadap dokumen atau kalimat dengan memberikan bobot atau nilai pada masing-masing kata [8].
+Tujuan penelitian ini adalah untuk mengevaluasi seberapa efektif algoritma SVM dalam mengatasi masalah interpretasi bahasa informal pada dataset lagu "Arteri". Fokus utama penelitian adalah menentukan kemampuan algoritma ini untuk menghasilkan klasifikasi otomatis yang presisi melalui evaluasi metrik kinerja yang ketat, seperti akurasi, presisi, recall, dan skor F1. Studi ini diharapkan memberikan kontribusi teknis untuk pengembangan sistem Natural Language Processing (NLP) untuk teks bahasa Indonesia non-standar. Selain itu, hasilnya akan memberikan wawasan strategis berbasis data bagi industri musik tentang tren persepsi audiens terhadap masalah quarter life crisis.
+
+1.2	Identifikasi Masalah
+Berdasarkan latar belakang yang telah dijelaskan, terdapat beberapa isu dan tantangan yang dapat diidentifikasi sebagai fokus penelitian, antara lain:
+1.	Karena volume besar data opini pendengar lagu "Arteri", ribuan data opini di YouTube sulit dianalisis secara manual. Akibatnya, metode komputasi otomatis diperlukan.
+2.	Data sentimen dari komentar sering menggunakan bahasa gaul, singkatan, dan slang, yang sulit diolah oleh model analisis sentimen konvensional karena kompleksitas bahasa informal.
+3.	Untuk mengklasifikasikan sentimen pada data teks dengan dimensi fitur yang luas dan jumlah sampel yang terbatas, algoritma pembelajaran mesin yang tangguh (robust) seperti SVM diperlukan.
+
+
+1.3	Batasan Masalah
+Ada beberapa masalah utama yang menjadi fokus penelitian ini, berdasarkan informasi di atas:
+1.	Hanya teks komentar dari video musik resmi lagu grup musik "Arteri" yang digunakan sebagai sumber data penelitian .Feast, yang dapat diakses melalui situs web YouTube.
+2.	Dengan menggunakan ekstraksi fitur TF-IDF pada metode SVM, algoritma klasifikasi tidak dapat dibandingkan dengan metode pembelajaran mendalam atau algoritma klasifikasi lainnya.
+3.	Output klasifikasi sentimen dikategorikan menjadi tiga kelas: Positif, Negatif, dan Netral. Kinerja model dinilai dengan parameter Matrix Confusion: Akurasi, Presisi, Recall, dan Skor F1.
+
+1.4	Rumusan Masalah
+Fokus utama adalah menjembatani klasifikasi sentimen menggunakan SVM secara kuantitatif. Masalah-masalah utama yang dirumuskan adalah:
+1.	Bagaimana penerapan algoritma SVM dengan pembobotan TF-IDF untuk mengklasifikasikan sentimen komentar publik pada video musik ".Feast - Arteri"? 
+2.	Seberapa baik kinerja model SVM dalam mengenali pola sentimen pada dataset komentar yang tidak terstruktur jika diukur menggunakan parameter evaluasi Confusion Matrix (Akurasi, Presisi, Recall, dan F1-Score)?
+3.	Bagaimana kecenderungan dominasi sentimen pendengar (positif, negatif, atau netral) terhadap pesan lagu tersebut berdasarkan hasil klasifikasi model yang dibangun?
+
+1.5	Tujuan Penelitian
+Tujuan Rumusan masalah berikut adalah tujuan dari penelitian ini:
+1.	Mengimplementasikan algoritma SVM yang dikombinasikan dengan pembobotan fitur TF-IDF untuk melakukan klasifikasi sentimen otomatis pada data komentar YouTube video musik ".Feast - Arteri".
+2.	Mengevaluasi kinerja model SVM yang dibangun dalam menangani data teks tidak terstruktur dengan mengukur nilai Akurasi, Presisi, Recall, dan F1-Score menggunakan metode Confusion Matrix
+3.	Mengetahui kecenderungan tren sentimen dominan dari pendengar (apakah cenderung positif, negatif, atau netral) sebagai gambaran respons publik terhadap isu yang diangkat dalam lagu tersebut.
+
+1.6	Manfaat Penelitian
+Penelitian ini diharapkan dapat memberikan manfaat sebagai berikut:
+
+1.6.1	Manfaat Teoritis
+1.	Memberikan bukti empiris tentang efektivitas algoritma SVM dalam menyelesaikan masalah klasifikasi sentimen pada data teks tidak terstruktur dengan menggunakan pembobotan TF-IDF.
+2.	Mengembangkan literatur teknis tentang kemampuan SVM untuk menangani masalah bahasa Indonesia informal (gaul, slang, dan singkatan) dengan kinerja yang stabil pada dataset berskala kecil hingga menengah.
+3.	Menjadi referensi akademis tentang bagaimana menggunakan metode pengajaran mesin untuk menganalisis opini publik di media sosial tanpa memerlukan sumber daya komputasi yang signifikan seperti model Deep Learning.
+
+1.6.2	Manfaat Praktis
+1.	Bagi Grup Musik .Feast, ini bertujuan untuk memberikan insights berbasis data tentang bagaimana lagu "Arteri" diterima oleh pendengar serta mengidentifikasi resonansi emosional audiens terhadap pesan yang disampaikan.
+2.	Bagi industri musik digital, memberikan gambaran tentang tren persepsi pendengar terhadap masalah sensitif seperti quarter life crisis, yang dapat digunakan sebagai referensi untuk membuat karya yang berkaitan dengan keadaan psikologis pasar.
+3.	Untuk Peneliti Berikutnya, menyediakan kerangka kerja teknis dan dataset terstruktur. Mereka dapat digunakan sebagai basis perbandingan (baseline) untuk penelitian lebih lanjut tentang Analisis Sentimen atau pembuatan algoritma klasifikasi lainnya.
+
+1.7	Sistematika Penulisan
+Sistematika penulisan dalam proposal penelitian ini dibagi menjadi lima bab dengan uraian sebagai berikut:
+
+1.	BAB I PENDAHULUAN 
+Bab ini membahas latar belakang masalah yang memuat konteks penelitian, yaitu betapa pentingnya melakukan analisis sentimen pada lagu grup musik "Arteri" .Feast dan persyaratan teknis untuk pemilihan algoritma SVM untuk dataset kecil. Selain itu, bab ini mengidentifikasi masalah, tujuan dan batasan penelitian pada platform YouTube, serta keuntungan teoritis dan praktis dari penelitian.
+
+2.	BAB II TINJAUAN PUSTAKA
+Dalam bab ini, literatur yang relevan dibahas. Ini mencakup teori dasar analisis sentimen, pengolahan teks, proses preprocessing data (termasuk TF-IDF), dan konsep matematis algoritma SVM. Selain itu, sebagai acuan komparatif untuk penelitian ini, bab ini juga membahas penelitian sebelumnya.
+
+3.	BAB III METODE PENELITIAN
+Dalam bab ini, pendekatan yang digunakan dijelaskan secara rinci, mulai dari desain penelitian kuantitatif dengan kerangka KDD, metode pengumpulan data komentar YouTube, dan fase preprocessing data. Selain itu, skenario pengujian, parameter algoritma SVM yang digunakan, dan metode evaluasi model dengan Matrix Confusion dibahas dalam bagian ini.
+
+4.	BAB IV HASIL DAN PEMBAHASAN
+Menyajikan hasil dari eksperimen komputer sebagai dasar penelitian. Fokus diskusi adalah analisis kinerja algoritma SVM, evaluasi akurasi menggunakan metrik F1-Score, dan interpretasi visualisasi tren sentimen pendengar lagu "Arteri" yang dihasilkan dari hasil klasifikasi otomatis.
+
+5.	BAB V PENUTUP
+Berisi kesimpulan yang menjawab rumusan masalah penelitian secara keseluruhan berdasarkan data kuantitatif yang dikumpulkan. Selain itu, bab ini mencakup implikasi praktis hasil penelitian bagi industri musik, serta rekomendasi teknis untuk pengembangan model masa depan.
+ 
+BAB II
+TINJAUAN PUSTAKA DAN LANDASAN TEORI
+
+2.1	Tinjauan Pustaka
+	Analisis sentimen adalah bagian dari NLP yang berkonsentrasi pada penemuan dan klasifikasi polaritas emosi dalam data tekstual. Analisis sentimen adalah salah satu teknik NLP yang digunakan untuk mengidentifikasi dan mengkategorikan opini atau perasaan dalam teks menjadi beberapa kelas sentimen, seperti positif, negatif, atau netral [9]. Dalam penelitian ini, tujuan dari tinjauan literatur adalah untuk mendapatkan pemahaman tentang bagaimana metode komputasi dapat digunakan untuk membagi pendapat pendengar lagu "Arteri" menjadi sentimen positif, negatif, dan netral. Landasan teori ini mencakup penelitian literatur tentang fitur bahasa Indonesia informal yang sering ditemukan dalam dataset media sosial. Penggunaan slang dan singkatan merupakan masalah utama bagi keberhasilan model klasifikasi konvensional. Teks dengan penggunaan bahasa yang bersifat informal perlu dilakukan normalisasi,agar komputer dapat memahami bahasa yang digunakan oleh manusia [10]. 
+	Pengolahan data opini di media sosial menghadapi masalah utama karena penggunaan bahasa Indonesia non-baku yang dominan dan struktur teks yang sangat tidak terstruktur. Menurut literatur, penggunaan slang, singkatan, dan variasi bahasa gaul seringkali menjadi hambatan utama yang menyebabkan model klasifikasi konvensional menjadi tidak akurat. Hal ini dapat mengakibatkan klasifikasi yang salah atau tidak akurat, karena makna dasar dari teks slang mungkin hilang atau disalahartikan [11]. Oleh karena itu, mendapatkan pemahaman teoritis tentang teknik preprocessing seperti normalisasi teks dan penghapusan suara sangat penting untuk memberikan algoritma pemahaman yang akurat tentang konteks bahasa manusia.
+	Untuk mengatasi tantangan klasifikasi pada dataset dengan dimensi fitur tinggi namun jumlah sampel terbatas, penelitian ini berfokus pada penerapan algoritma SVM. SVM adalah metode supervised learning yang bekerja dengan prinsip pencarian hyperplane (garis pemisah) terbaik untuk memisahkan kelas sentimen dengan margin yang maksimal. Berbeda dengan model Deep Learning yang membutuhkan data masif, literatur teknis mendukung penggunaan SVM yang dikombinasikan dengan ekstraksi fitur TF-IDF (Term Frequency-Inverse Document Frequency) sebagai solusi yang tangguh (robust) dan efisien untuk menghasilkan akurasi tinggi pada analisis sentimen teks komentar YouTube.
+
+2.1.1	Penelitian Terdahulu 
+Tabel 2. 1 Penelitian Terdahulu
+No	Author (Tahun)	Judul	Tujuan Penelitian	Hasil Penelitian	Kesimpulan
+1	I. S. K. Idris, Y. A. Mustofa, dan I. A. Salihi (2023)	Analisis Sentimen Terhadap Penggunaan Aplikasi Shopee Menggunakan Algoritma Support Vector Machine (SVM) [12]
+Mengklasifikasikan sentimen positif dan negatif pada ulasan pengguna aplikasi Shopee di Play Store menggunakan algoritma Support Vector Machine (SVM)	Algoritma SVM menghasilkan akurasi sebesar 98% dan nilai F1-score sebesar 0,98 berdasarkan 3.000 data ulasan pengguna	Algoritma SVM terbukti efektif untuk analisis sentimen pada data ulasan aplikasi dengan performa klasifikasi yang sangat baik
+2	Primandani Arsi & Retno Waluyo (2021)	Analisis Sentimen Wacana Pemindahan Ibu Kota Indonesia Menggunakan Algoritma Support Vector Machine (SVM) [13]
+Menganalisis sentimen publik di Twitter terhadap wacana pemindahan ibu kota Indonesia dengan metode Support Vector Machine (SVM)	Dari 1.236 tweet (404 positif, 832 negatif), metode SVM menghasilkan akurasi 96,68%, precision 95,82%, recall 94,04%, dan AUC 0,979	Algoritma SVM terbukti sangat efektif memberikan performa lebih baik dibanding metode sebelumnya seperti Naive Bayes dan BM25+KNN
+3	Alman Muhammadin & Irwan Agus Sobari (2021	Analisis Sentimen Pada Ulasan Aplikasi Kredivo Dengan Algoritma SVM dan Naive Bayes Classifier [14]
+Membandingkan kinerja algoritma Support Vector Machine (SVM) dan Naive Bayes Classifier (NBC) dalam mengklasifikasikan sentimen positif dan negatif pada ulasan aplikasi Kredivo di Google Play Store	Algoritma SVM menghasilkan akurasi sebesar 83,3%, sedangkan Naive Bayes Classifier menghasilkan akurasi 80,8%. Nilai presisi dan recall SVM juga lebih stabil dibandingkan NBC	Algoritma SVM memiliki performa yang lebih baik dibandingkan Naive Bayes Classifier dalam analisis sentimen ulasan aplikasi Kredivo, meskipun keduanya sama-sama mampu mengklasifikasikan sentimen dengan cukup baik
+4	Dian Siti Utami & Adhitia Erfina (2021)	Analisis Sentimen Pinjaman Online di Twitter Menggunakan Algoritma Support Vector Machine (SVM) [15]
+Mengetahui sentimen masyarakat terhadap pinjaman online di Twitter dengan menggunakan algoritma Support Vector Machine (SVM)	Algoritma SVM menghasilkan akurasi 62,00%. Hasil klasifikasi menunjukkan 59% sentimen negatif dan 41% sentimen positif terhadap pinjaman online	Algoritma SVM cukup baik dalam mengklasifikasikan sentimen masyarakat di Twitter. Mayoritas sentimen bersifat negatif, menunjukkan masih banyak masyarakat yang ragu terhadap pinjaman online karena risiko yang tinggi.
+5	Tinaliah & Triana Elizabeth (2022)	Analisis Sentimen Ulasan Aplikasi PrimaKu Menggunakan Metode Support Vector Machine [16]
+Menganalisis sentimen ulasan pengguna aplikasi PrimaKu di Google Play Store menggunakan metode SVM dengan variasi kernel (Linear, Polynomial, dan RBF)	SVM dengan Linear Kernel menghasilkan akurasi tertinggi sebesar 97,5%, dibandingkan Polynomial Kernel (96,5%) dan RBF Kernel (97%). Mayoritas ulasan bersifat positif	Metode SVM mampu analisis sentimen sangat baik pada ulasan aplikasi PrimaKu. Linear Kernel merupakan kernel terbaik dengan tingkat akurasi paling tinggi
+6	Harnelia & Rizal Adi Saputra (2024)	Analisis Sentimen Review Skincare Skintific dengan Algoritma Support Vector Machine (SVM) [17]
+Menganalisis sentimen positif dan negatif masyarakat terhadap produk skincare Skintific berdasarkan ulasan di berbagai platform media sosial menggunakan algoritma SVM	Menggunakan 958 data ulasan. SVM dengan kernel linear menghasilkan akurasi 94%, dengan 862 sentimen positif (90%) dan 96 sentimen negatif (10%). Nilai precision, recall, dan f1-score > 0,9	Algoritma SVM terbukti efektif dalam mengklasifikasikan sentimen ulasan produk skincare berbahasa Indonesia. Mayoritas ulasan bersifat positif, menunjukkan produk Skintific cukup diminati oleh konsumen
+7	Herwinsyah & Arita Witanti (2022)	Analisis Sentimen Masyarakat Terhadap Vaksinasi Covid-19 pada Media Sosial Twitter Menggunakan Algoritma Support Vector Machine (SVM) [18]
+Mengetahui kecenderungan sentimen masyarakat Indonesia terhadap kebijakan vaksinasi Covid-19 melalui media sosial Twitter menggunakan algoritma SVM	Dari 4.708 data tweet, diperoleh 83,6% sentimen positif dan 16,4% sentimen negatif. Model SVM dengan pembagian data 80% training dan 20% testing menghasilkan akurasi 89%, f1-score 93%, precision 88%, dan recall 99%	Algoritma SVM efektif untuk menganalisis sentimen masyarakat terhadap vaksinasi Covid-19. Mayoritas masyarakat menunjukkan sikap positif dan cenderung menerima kebijakan vaksinasi pemerintah
+8	Fathurahman Bei & Sudin Saepudin (2021)	Analisis Sentimen Aplikasi Tiket Online di Play Store Menggunakan Metode Support Vector Machine (SVM) [19]
+Menganalisis sentimen ulasan pengguna aplikasi tiket online di Google Play Store dan menentukan aplikasi terbaik berdasarkan nilai akurasi menggunakan metode SVM	Pegipegi memperoleh akurasi tertinggi sebesar 78,21%, diikuti Agoda (77,00%), Traveloka (75,03%), Mister Aladin (64,00%), dan Tiket.com (58,68%)	Metode SVM efektif untuk analisis sentimen, dan berdasarkan hasil akurasi tertinggi, Pegipegi dinilai sebagai aplikasi tiket online terbaik
+
+2.2	Landasan Teori
+2.2.1	Musik
+Menggabungkan harmoni, ritme, dan melodi, musik adalah fenomena universal yang memungkinkan orang untuk berkomunikasi secara emosional di luar batas bahasa verbal. Musik memainkan peran sentral dalam kehidupan manusia, tidak hanya sebagai media hiburan tetapi juga sebagai sarana penting untuk ekspresi emosional dan kesehatan mental [20]. Musik tidak hanya berfungsi sebagai hiburan, tetapi juga menjadi alat untuk mendokumentasikan pengalaman psikologis dan sosial manusia. Musik telah menjadi kebutuhan universal yang integral dalam kehidupan manusia, memainkan peran penting dalam pengaturan suasana hati dan kesejahteraan psikologis [21].  Musik memiliki kemampuan unik untuk mewakili identitas diri, di mana elemen seperti lirik dan melodi bekerja sama untuk menyentuh aspek psikologis pendengarnya. lirik lagu, aransemen musik, dan keterlibatan publik artis berkontribusi terhadap keampuhannya sebagai sarana penyampaian pesan tentang kesehatan mental [22]. Oleh karena itu, musik sering digunakan sebagai alat introspeksi maupun terapi informal.
+
+2.2.2	YouTube
+YouTube, platform media sosial dan berbagi video, memungkinkan komentar publik, menjadikannya sumber data tekstual yang sangat kaya untuk menganalisis opini publik secara besar-besaran. YouTube yang menjadi salah satu platform media sosial terkemuka, memegang peranan penting dalam penyebaran berita dan pembentukan opini publik di Indonesia [23]. Konten YouTube lebih beragam dibanding Instagram, Facebook, atau Twitter berkat ruang pemutaran video/audio yang lebih besar [24]. Beragam respons, interpretasi, dan resonansi emosional pendengar terhadap tema kebingungan identitas dan pelepasan trauma ditunjukkan dalam data komentar YouTube untuk lagu "Arteri." Penggunaan platform YouTube sebagai sumber dataset memerlukan metode otomatisasi untuk menghindari bias analisis manual karena volume data yang besar.
+
+2.2.3	Profil .Feast
+.Feast adalah grup musik yang sejak debutnya pada tahun 2012 telah menunjukkan sikap konsisten terhadap narasi yang tajam dan sikap kritis terhadap dinamika sosial. Grup ini terkenal karena mampu mengangkat masalah emosional ke dalam struktur musik rock alternatif yang kompleks. feast dikenal dengan lirik liriknya yang puitis dan seringkali mengangkat tema-tema personal dan sosial dengan kedalaman emosional [25]. .Feast berhasil mengumpulkan banyak pendengar yang aktif berbicara tentang pesan moral dan masalah sosial-personal yang diangkat dalam setiap lagu yang mereka rilis.
+
+2.2.4	Analisis Sentimen
+Dalam proses NLP, analisis sentimen bertujuan untuk menemukan, mengekstraksi, dan mengklasifikasikan polaritas emosi ke dalam teks. Analisis   sentimen   dapat   mengklasifikasikan teks yang mengandung opini sebagai kelas positif, negatif, atau netral secara otomatis [26]. Analisis sentimen digunakan dalam penelitian ini untuk memahami secara empiris bagaimana persepsi publik dan persepsi masyarakat terhadap narasi yang dibawakan dalam lagu "Arteri." Fokus utamanya adalah menggabungkan klasifikasi polaritas dengan pemahaman tentang sentimen dominan pendengar.
+
+2.2.5	Python
+Python adalah bahasa pemrograman tingkat tinggi yang bersifat open-source dengan filosofi desain yang berpusat pada sintaks yang sederhana dan tingkat keterbacaan kode yang tinggi. Python adalah bahasa pemrograman tingkat tinggi yang sangat populer, dikenal karena sintaksnya yang sederhana dan mudah dipahami [27]. Python adalah alat utama yang sangat diandalkan dalam bidang sains data, khususnya penelitian mesin pembelajaran dan NLP, karena memiliki dukungan ekosistem pustaka (library) yang matang yang memungkinkan manipulasi data komputasi yang sangat besar dengan cepat. Dengan fleksibilitas bahasa ini, seluruh siklus analisis dapat diintegrasikan dalam lingkungan kerja yang berkesinambungan. Ini melibatkan proses pra-pemrosesan teks mentah, ekstraksi fitur numerik, dan penerapan algoritma klasifikasi tingkat lanjut seperti SVM dan pengujian evaluasi kinerjanya.
+
+2.2.6	Natural Language Processing (NLP)
+Cabang kecerdasan buatan yang disebut NLP berkonsentrasi pada cara komputer dan bahasa manusia berinteraksi sehingga mesin dapat memahami teks dalam konteksnya. NLP, merupakan bidang kecerdasan buatan dimana komputer didesain untuk dapat  berkomunikasi dengan manusia menggunakan bahasa alami, seperti Bahasa Indonesia [28]. Adanya ambiguitas, ironi, dan penggunaan bahasa informal seperti slang, gaul, dan singkatan merupakan kendala utama proses pengolahan bahasa natural pada data komentar YouTube di Indonesia. Oleh karena itu, untuk mengubah teks tidak terstruktur menjadi format yang dapat diproses oleh algoritma machine learning, diperlukan teknik preprocessing data yang tepat.
+
+2.2.7	Text Preprocessing
+Tahap Preprocessing Text adalah transformasi data teks mentah menjadi format terstruktur yang bersih sehingga algoritma mesin dapat memprosesnya. Proses ini dilakukan secara berurutan, termasuk membersihkan (menghilangkan suara seperti simbol dan emoji), memotong case, tokenizing, menghilangkan stopword, dan stemming untuk mengembalikan kata ke bentuk aslinya. Text preprocessing adalah tahapan di mana data akan disiapkan serta di proses agar menjadi data yang siap untuk dianalisis [29]. Tujuan dari proses ini adalah untuk mengurangi ukuran fitur dan ambiguitas yang ada pada kumpulan komentar YouTube. Dengan demikian, proses ini meningkatkan kemanjuran dan akurasi model dalam mengidentifikasi pola sentimen.
+
+2.2.8	Term Frequency-Inverse Document Frequency (TF-IDF)
+TF-IDF adalah metode pembobotan yang digunakan untuk mengubah data teks komentar menjadi vektor numerik dengan menilai seberapa penting suatu kata terhadap dokumen dalam kumpulan korpus. suatu cara pemberian bobot hubungan suatu kata (term) terhadap  Dokumen [30]. Metode ini bekerja dengan menggabungkan dua konsep nilai:
+1.	Term Frequency (TF) Menghitung frekuensi kemunculan kata t dalam dokumen.
+ 
+2.	Inverse Document Frequency (IDF) adalah alat yang digunakan untuk menghitung nilai kelangkaan kata. Dengan semakin sedikit kata yang muncul dalam seluruh koleksi dokumen (N), semakin berat kata tersebut, yang dirumuskan sebagai:
+ 
+
+2.2.9	Support Vector Machine (SVM)
+Salah satu tujuan algoritma SVM adalah untuk menemukan bidang pemisah (hyperplane) terbaik dalam ruang besar yang memisahkan data antar kelas sentimen (positif, negatif, atau netral). Ide utama SVM adalah untuk memaksimalkan margin, yaitu jarak terdekat antara hyperplane dan titik data masing-masing kelas. support vector machine bekerja dengan mencari hyperplane terbaik untuk membagi kelas, naive bayes bekerja dengan cara mencari nilai probabilitas bersyarat terbesar dari masing-masing kelas [31]. Persamaan untuk garis hyperplane adalah:
+𝑤 · 𝑥 + 𝑏 = 0
+Di mana w adalah vektor bobot (normal terhadap bidang) dan b adalah bias. Untuk mendapatkan pemisah optimal, SVM mencari nilai w dan b yang meminimalkan ||w||2 dengan batasan tertentu. Algoritma ini dipilih karena kemampuannya yang tangguh (robust) dalam menangani data teks berdimensi tinggi dan meminimalisir kesalahan generalisasi pada dataset yang terbatas.
+
+2.2.10	Metrik Evaluasi Kinerja Model
+Dalam penelitian kuantitatif mutlak, evaluasi kinerja model diperlukan untuk mengetahui seberapa akurat model dapat melakukan klasifikasi. Dalam penelitian ini, metrik seperti akurasi, presisi, pengecualian, dan skor F1 digunakan. Confusion Matrix digunakan untuk menghitung berbagai metrik kinerja dalam evaluasi model klasifikasi. Metrik-metrik tersebut meliputi Akurasi (Accuracy), Presisi (Precision), Recall (Sensitivitas), dan F1-Score [32].  Nilai-nilai ini memberikan bukti empiris mengenai efektivitas model LSTM dalam menangani dataset bahasa Indonesia informal pada komentar YouTube, dan juga berfungsi sebagai indikator keberhasilan implementasi algoritma untuk mencapai tujuan penelitian.
+
+2.2.11	Knowledge Discovery in Databases (KDD)
+Tujuan dari Knowledge Discovery in Databases (KDD) adalah untuk mendapatkan informasi dan pola penting yang belum diketahui sebelumnya dari sekumpulan data yang sangat besar. Knowledge Discovery in Databases (KDD), yaitu pemilihan data, pembersihan data, transformasi data, pembuatan model, dan penilaian [33]. Dalam penelitian komputasi teks, KDD berfungsi sebagai landasan alur kerja sistematis yang membantu mengubah data mentah menjadi pengetahuan baru yang dapat diukur. Siklus ini secara operasional mencakup langkah-langkah berikut: mendapatkan data dari repositori sumber, melakukan pembersihan awal untuk menghilangkan suara, dan mengubah teks menjadi representasi vektor numerik. Metode ini dimaksudkan untuk mempersiapkan data sebelum fase inti, data mining. Fase ini melibatkan penggunaan algoritma klasifikasi seperti SVM untuk menggali pola secara otomatis. Pada akhirnya, fase ini mengarah pada proses evaluasi dan interpretasi yang menghasilkan pemahaman yang relevan tentang tren polaritas sentimen dari pola prediktif.
+
+2.3	Kerangka Berpikir
+Kerangka berpikir penelitian ini dibuat untuk mengatasi masalah mengevaluasi pendapat publik tentang kolom komentar video musik ".Feast-Arteri", yang sangat penuh dengan bahasa tidak baku. Mengingat bahwa analisis manual tidak efisien dan rentan terhadap bias, penelitian ini menggunakan metode NLP. Metode ini dimulai dengan pengumpulan data melalui scraping web, dan dilanjutkan dengan tahap preprocessing teks untuk menghilangkan suara dan menstandarisasi bentuk kata. Selanjutnya, data teks yang telah bersih dan terstruktur diubah menjadi representasi numerik melalui metode pembobotan Frekuensi TF-IDF.
+Pada tahap analisis utama, vektor data diproses menggunakan algoritma SVM. Algoritma ini mengkategorikan komentar ke dalam kategori sentimen positif, negatif, atau netral, menggunakan mekanisme pencarian garis pemisah antar kelas yang paling efektif. Selanjutnya, validitas model diuji menggunakan metrik evaluasi Confusion Matrix untuk menghasilkan nilai akurasi, presisi, recall, dan F1-Score. Keseluruhan alur proses ini berakhir dengan munculnya sistem klasifikasi otomatis. Sistem ini dapat memberikan gambaran empiris yang akurat tentang tren emosional dan bagaimana pendengar menangani masalah yang diangkat dalam lagu tersebut.
+ 
+Tabel 2. 2 Kerangka Berpikir
+Masalah
+1.	Opini publik yang masif pada video musik '.Feast - Arteri'.
+2.	Format data teks tidak terstruktur dan menggunakan bahasa informal.
+3.	Jumlah data terbatas (1.449 data).
+4.	Proses analisis sentimen manual rentan bias dan tidak efisien.
+
+
+Pengumpulan Data
+Sumber data diambil dari kolom komentar YouTube resmi .Feast. Menggunaknan Teknik observasi non-partisipan (Web Scraping). Dengan output 1.449 baris data mentah berformat .CSV.
+
+
+Metode Penelitian
+Algoritma	Tools
+Support Vector Machine (SVM)	Bahasa Python (Library Scikit-learn, Pandas, NLTK)
+
+Tujuan / Hasil (Output)
+1.	Sistem klasifikasi tiga kelas sentimen: Positif, Negatif, Netral.
+2.	Metrik evaluasi performa model: Akurasi, Presisi, Recall, F1-Score.
+3.	Pemetaan wawasan tren persepsi pendengar terhadap isu lagu.
+ 
+BAB III
+METODE PENELITIAN
+
+3.1	Jenis dan Pendekatan Penelitian
+Penelitian Eksperimen komputasi digunakan dalam penelitian kuantitatif. Metode ini digunakan untuk mengukur kinerja algoritma pengajaran mesin dengan data numerik yang dikumpulkan dari ekstraksi teks secara objektif. Untuk memisahkan kelas data, algoritma SVM, yang merupakan algoritma pembelajaran yang diawasi dengan prinsip pencarian hyperplane terbaik, digunakan. Studi ini bersifat deskriptif-kuantitatif, dan fokus utamanya adalah mengevaluasi ketepatan model untuk mengklasifikasikan sentimen serta menunjukkan tren persepsi pendengar lagu "Arteri" berdasarkan distribusi kelas sentimen yang dihasilkan.
+
+3.2	Tahapan Penelitian
+Sebuah alur desain penelitian dibuat untuk memastikan penelitian ini berjalan secara sistematis, terarah, dan dapat dipertanggungjawabkan. Tahapan ini mencakup seluruh proses komputasi, mulai dari proses pengadaan data mentah hingga penarikan kesimpulan akhir dari kinerja algoritma.
+
+
+ 
+Gambar 3. 1 Alur Tahapan Penelitain
+
+3.3	Desain Penelitian
+Desain penelitian ini disesuaikan dengan kerangka kerja KDD, yang memproses data teks dalam tiga tahapan yang terintegrasi. Jalan dimulai dengan Blok Input, yang digunakan untuk mengekstraksi data komentar dari YouTube. Blok Proses kemudian mencakup preprocessing, yang mencakup pembersihan, stemming, dan normalisasi, serta pembobotan kata, yang menggunakan TF-IDF sebagai input untuk pelatihan model SVM. Blok Output adalah tempat rangkaian berakhir. Di sini, Confusion Matrix digunakan untuk menilai kinerja model. Matriks ini digunakan untuk mengidentifikasi tren sentimen pendengar terhadap masalah quarter life crisis.
+
+3.4	Variabel Penelitian
+Dalam eksperimen komputasi ini, variabel penelitian didefinisikan sebagai sifat atau atribut objek penelitian yang memiliki variasi tertentu yang ditetapkan untuk diperiksa dan diambil kesimpulan tentangnya. Dua kategori variabel yang digunakan dalam penelitian ini adalah variabel independen (X) dan variabel dependen (Y).
+
+3.3.1	Variabel Independen (X)
+Variabel independen adalah variabel yang mengubah atau menimbulkan variabel dependen. Variabel independen dalam penelitian ini adalah fitur teks komentar. Variabel ini berasal dari data tekstual mentah yang diambil dari kolom komentar video musik "Arteri" di YouTube. Sebelum diproses oleh model, variabel ini mengalami perubahan melalui tahap preprocessing dan pembobotan TF-IDF. Algoritma akan menggunakan nilai bobotnya untuk mempelajari pola setiap kata (term) yang berbeda dalam komentar tersebut.
+
+3.3.2	Variabel Dependen (Y)
+Kelas sentimen adalah label kategori output yang diprediksi oleh model SVM berdasarkan fitur teks. Kinerja Model untuk atau adalah nilai yang menunjukkan seberapa baik algoritma berhasil dalam klasifikasi. Akurasi, Presisi, Recall, dan Skor F1 adalah metrik yang menunjukkan nilai ini. Tiga kelas terdiri dari kelas ini:
+1.	Positif untuk komentar yang menunjukkan dukungan, penghargaan, atau dorongan emosional.
+2.	Negatif untuk komentar yang mengandung kritik tajam, hujatan, atau ketidaksukaan.
+3.	Komentar yang tidak memihak atau tidak mengandung emosi yang jelas tidak positif.
+
+3.5	Sumber dan Jenis Data
+Penelitian ini menggunakan data sekunder yang diperoleh secara tidak langsung melalui media perantara dan tersedia secara publik. Teks tidak terstruktur, yang mengandung kritik, pendapat, dan tanggapan audiens, merupakan sumber data. Kolom komentar video musik resmi sebelum di olah mengumpulkan total 1.449 data komentar .Feast Arteri, yang diunggah ke kanal YouTube resmi. Data utama untuk studi ini berasal dari teks komentar .Feast yang menggunakan berbagai gaya bahasa, termasuk bahasa Indonesia baku, bahasa informal (slang), dan majas sarkasme, menunjukkan perasaan pendengar terhadap masalah yang diangkat dalam lagu adalah ciri utama dataset ini.
+
+3.6	Teknik Pengumpulan Data
+Untuk pengumpulan data dalam penelitian ini, metode observasi non-partisipasi dengan scraping web digunakan. Teknik ini memungkinkan pengumpulan data dalam jumlah besar dari platform digital tanpa perlu berinteraksi langsung dengan subjek (pendengar). Ini adalah prosedur sistematis yang digunakan untuk mengumpulkan informasi.
+
+3.6.1	Proses dan Hasil Scraping Data Mentah
+Pada tahap awal, proses scraping dilakukan untuk menarik seluruh komentar yang tersedia secara publik pada kolom komentar video tersebut. Dari proses pengambilan data otomatis ini, berhasil dikumpulkan sebanyak 1.449 data komentar mentah.
+Data mentah ini masih bersifat kotor, di mana terdapat banyak komentar yang hanya berisi rangkaian emoji tanpa teks, komentar yang berulang (spam), hingga komentar yang menggunakan bahasa asing atau bahasa yang tidak dapat diidentifikasi maknanya untuk kebutuhan analisis sentimen. Seluruh data mentah tersebut disimpan dalam format file .CSV untuk kemudian masuk ke tahap seleksi.
+
+
+3.6.2	Validasi dan Finalisasi Dataset
+Setelah data mentah dikumpulkan, tahap validasi data dilakukan untuk menentukan kelayakan komentar yang akan diolah lebih lanjut oleh model SVM. Ini dilakukan dengan kriteria yang mengeluarkan data yang tidak memenuhi syarat, seperti komentar yang kosong, komentar yang hanya terdiri dari simbol atau angka, dan komentar duplikat.
+Hasil validasi menunjukkan bahwa dari 1.449 data awal, 1.059 data komentar yang valid dan siap untuk diproses. Sebanyak 390 data komentar dinyatakan tidak layak karena tidak memiliki informasi yang cukup untuk mengklasifikasikan polanya. Dataset terakhir berjumlah 1.059, yang merupakan fokus penelitian, akan melewati tahap preprocessing teks dan pembobotan fitur menggunakan TF-IDF.
+
+3.7	Instrumen Penelitian
+Perangkat keras dan perangkat lunak yang digunakan untuk mengumpulkan, memproses, dan menganalisis data adalah instrumen penelitian dalam penelitian eksperimen komputasi ini. Spesifikasi alat yang digunakan, misalnya, adalah sebagai berikut:
+
+3.7.1	Perangkat Keras (Hardware)
+Seluruh proses komputasi dijalankan oleh perangkat keras. Perangkat keras yang digunakan dalam penelitian ini adalah sebagai berikut:
+1.	Jenis Perangkat: Personal Computer (PC)
+2.	Prosesor (CPU): AMD Ryzen 5 2600.
+3.	Memori (RAM): 16 GB untuk kelancaran pengolahan dataframe.
+4.	Penyimpanan: SSD untuk menyimpan dataset dan model.
+5.	Koneksi Internet menggunakan LAN WiFi.
+
+
+
+3.7.2	Perangkat Lunak (Software)
+Untuk membuat model klasifikasi sentimen, lingkungan kerja dan alat pemrograman digunakan. Perangkat lunak yang digunakan termasuk:
+1.	Sistem Operasi: Windows 11.
+2.	Bahasa Pemrograman: Python, dipilih karena memiliki dukungan pustaka yang luas untuk Data Science dan Machine Learning.
+3.	Lingkungan Pengembangan (IDE): AntiGravity (untuk penulisan dan eksekusi kode program secara interaktif).
+4.	Pustaka Pendukung (Libraries):
+a.	Pandas digunakan untuk manipulasi dan analisis data tabular (format DataFrame).
+b.	NLTK / Sastrawi untuk proses text preprocessing bahasa Indonesia (seperti stemming dan stopword removal).
+c.	Scikit-learn pustaka utama untuk implementasi algoritma TF-IDF dan SVM serta perhitungan metrik evaluasi.
+d.	Matplotlib / Seaborn untuk visualisasi data dan hasil evaluasi (Confusion Matrix).
+
+3.8	Teknik Analisis Data
+Penelitian ini menganalisis data melalui pendekatan pengajaran mesin dan dilakukan melalui beberapa tahapan sistematis. Tujuannya adalah untuk membuat model klasifikasi yang tepat dari data teks komentar yang belum diproses. Berikut ini adalah langkah-langkah yang digunakan untuk menganalisis data:
+
+3.8.1	Text Processing
+Tahap awal analisis adalah pra-pemrosesan data mentah, juga dikenal sebagai data mentah, yang dilakukan untuk menghilangkan gangguan dan menyeragamkan format data. Proses yang dilakukan meliputi:
+1.	Cleaning: Membersihkan data dari komponen yang tidak relevan seperti URL, username, tanda baca, angka, dan emoji.
+2.	Case Folding: Mengubah seluruh huruf menjadi huruf kecil (lowercase).
+3.	Tokenizing: Memecah kalimat menjadi potongan kata per kata (token).
+4.	Stopword Removal: Menghapus kata-kata umum yang sering muncul namun tidak memiliki makna sentimen (seperti "dan", "atau", "yang") menggunakan kamus stoplist bahasa Indonesia.
+5.	Stemming: Mengubah kata berimbuhan menjadi kata dasar menggunakan algoritma Sastrawi untuk mereduksi variasi kata.
+
+3.8.2	Pembobotan Kata (Feature Extraction)
+Metode TF-IDF digunakan untuk mengekstraksi fitur setelah data dibersihkan. Dengan metode ini, data teks dapat diubah menjadi representasi vektor. TFG-IDF memberikan bobot tinggi pada kata-kata tertentu yang menunjukkan sentimen tertentu dan bobot rendah pada kata-kata yang terlalu umum untuk membantu algoritma membedakan antar kelas.
+
+3.8.3	Pembagian Data (Data Splitting)
+Dataset yang telah berbentuk vektor kemudian dibagi menjadi dua bagian, yaitu:
+1.	Data Latih (Training Set) digunakan untuk melatih model SVM agar mempelajari pola hubungan antara fitur kata dengan label sentimen. Proporsi yang digunakan biasanya sebesar 80% dari total data.
+2.	Data Uji (Testing Set) digunakan untuk menguji kinerja model yang telah dilatih pada data baru yang belum pernah dilihat sebelumnya. Proporsi yang digunakan sebesar 20% dari total data.
+
+3.8.4	Klasifikasi dengan Support Vector Machine (SVM)
+Pada tahap ini, algoritma SVM diterapkan pada data latih untuk membangun model klasifikasi. SVM memetakan data ke dalam ruang vektor berdimensi tinggi dan menemukan hyperplane (garis pemisah) optimal dengan margin terbesar antara kelas sentimen Positif, Negatif, dan Netral. Kernel yang digunakan, seperti kernel linear atau RBF, dapat menangani pola data terpisah secara linear dan non-linear.
+
+3.8.5	Evaluasi Model
+Pada langkah terakhir, metode Matrix Confusion akan digunakan untuk menilai kinerja model. Empat metrik utama digunakan untuk mengevaluasi kinerja model. Mereka akan membandingkan prediksi yang dibuat pada data uji dengan label sebenarnya.
+1.	Akurasi (Accuracy) seberapa sering model menebak dengan benar secara keseluruhan.
+2.	Presisi (Precision) tingkat ketepatan prediksi positif model.
+3.	Recall untuk seberapa banyak data positif sebenarnya yang berhasil dikenali model.
+4.	F1-Score rata-rata harmonis antara presisi dan recall, yang menjadi acuan utama jika terdapat ketimpangan jumlah data antar kelas.
+ 
+DAFTAR PUSTAKA
+[1]	R. Surya, F. Reni, R. Bakhtiar, and A. A. D. Zaidan, “Musik Sebagai Media Komunikasi Bagi Kesehatan Mental,” vol. 5, no. 2, 2025.
+[2]	M. Allanm Nugroho and F. Junaedi, “Konstruksi Identitas Penggemar Musik Metal: Studi Kasus pada Kelompok Pasukan Babi Neraka,” J. Sarj. Ilmu Komun. J-SIKOM, vol. 6, no. 1, pp. 15–27, May 2025, doi: 10.36085/jsikom.v6i1.8169.
+[3]	K. Haeruddin, “Musik Indie Makassar: Makna, Proses Publikasi, dan Lokalitas,” Emik, vol. 7, no. 1, pp. 79–89, Jun. 2024, doi: 10.46918/emik.v7i1.2259.
+[4]	“Analisis Fenomenologi terhadap Peran Musik HINDIA  dalam Memberi Makna Hidup pada Kalangan Gen Z,” Interact. Commun. Stud. J., vol. 2, no. 1, 2025.
+[5]	A. F. Sonni and A. Ismail, “Analisis Netnografi atas Diskursus Publik Terkait Skandal Mahkamah Konstitusi,” vol. 11, no. 1, 2025.
+[6]	M. R. Pradana, W. Witanti, and A. Komarudin, “Prediksi Tingkat Keparahan Diabetes Melitus Menggunakan Support Vector Machine (SVM) dengan Kernel Polinomial dan RBF”.
+[7]	H. Darwis, N. Wanaspati, and S. Anraeni, “Support Vector Machine untuk Analisis Sentimen Masyarakat Terhadap Penggunaan Antibiotik di Indonesia,” Indones. J. Comput. Sci., vol. 12, no. 4, Aug. 2023, doi: 10.33022/ijcs.v12i4.3320.
+[8]	N. Arifin, U. Enri, and N. Sulistiyowati, “Penerapan Algoritma Support Vector Machine (SVM) dengan TF-IDF N-Gram untuk Text Classification,” STRING Satuan Tulisan Ris. Dan Inov. Teknol., vol. 6, no. 2, p. 129, Dec. 2021, doi: 10.30998/string.v6i2.10133.
+[9]	Nicky Dwi Kurnia, B. Kholifah, F. W. Nur Ani, and A. F. N. Nafii’, “Analisis Sentimen Multi-Kelas untuk Menilai Kepuasan Mahasiswa terhadap Aplikasi Manajemen Akademik Berbasis Web di Lingkungan Perguruan Tinggi,” J. Komput. Teknol. Inf. Sist. Inf. JUKTISI, vol. 4, no. 1, pp. 194–197, Jun. 2025, doi: 10.62712/juktisi.v4i1.363.
+[10]	Zhafirah, Ade, and Erwin, “Analisis Pengaruh Normalisasi Teks pada  Klasifikasi Sentimen Ulasan Produk Kecantikan,” vol. 9, no. 3, 2022, [Online]. Available: https://openlibrarypublications.telkomuniversity.ac.id/index.php/engineering/article/view/18184
+[11]	Pande Sindu, Agus Aan Jiwa Permana, and I Nyoman Saputra Wahyu Wijaya, “IDENTIFIKASI DAN NORMALISASI TEKS SLANG DENGAN FASTTEXT PADA TWITTER DALAM BAHASA INDONESIA,” J. Pendidik. Teknol. Dan Kejuru., vol. 21, no. 1, pp. 33–44, Jan. 2024, doi: 10.23887/jptkundiksha.v21i1.66381.
+[12]	I. S. K. Idris, Y. A. Mustofa, and I. A. Salihi, “Analisis Sentimen Terhadap Penggunaan Aplikasi Shopee Mengunakan Algoritma Support Vector Machine (SVM),” Jambura J. Electr. Electron. Eng., vol. 5, no. 1, pp. 32–35, Jan. 2023, doi: 10.37905/jjeee.v5i1.16830.
+[13]	P. Arsi and R. Waluyo, “Analisis Sentimen Wacana Pemindahan Ibu Kota Indonesia Menggunakan Algoritma Support Vector Machine (SVM),” J. Teknol. Inf. Dan Ilmu Komput., vol. 8, no. 1, p. 147, Feb. 2021, doi: 10.25126/jtiik.0813944.
+[14]	A. Muhammadin and I. A. Sobari, “ANALISIS SENTIMEN PADA ULASAN APLIKASI KREDIVO DENGAN ALGORITMA SVM DAN NBC,” Reputasi J. Rekayasa Perangkat Lunak, vol. 2, no. 2, pp. 85–91, Dec. 2021, doi: 10.31294/reputasi.v2i2.785.
+[15]	D. S. Utami and A. Erfina, “ANALISIS SENTIMEN PINJAMAN ONLINE DI TWITTER MENGGUNAKAN ALGORITMA SUPPORT VECTOR MACHINE (SVM),” 2021.
+[16]	T. Tinaliah and T. Elizabeth, “Analisis Sentimen Ulasan Aplikasi PrimaKu Menggunakan Metode Support Vector Machine,” JATISI J. Tek. Inform. Dan Sist. Inf., vol. 9, no. 4, pp. 3436–3442, Dec. 2022, doi: 10.35957/jatisi.v9i4.3586.
+[17]	H. Harnelia, “ANALISIS SENTIMEN REVIEW SKINCARE SKINTIFIC DENGAN ALGORITMA SUPPORT VECTOR MACHINE (SVM),” J. Inform. Dan Tek. Elektro Terap., vol. 12, no. 2, Apr. 2024, doi: 10.23960/jitet.v12i2.4095.
+[18]	H. Syah and A. Witanti, “ANALISIS SENTIMEN MASYARAKAT TERHADAP VAKSINASI COVID-19 PADA MEDIA SOSIAL TWITTER MENGGUNAKAN ALGORITMA SUPPORT VECTOR MACHINE (SVM),” J. Sist. Inf. Dan Inform. Simika, vol. 5, no. 1, pp. 59–67, Feb. 2022, doi: 10.47080/simika.v5i1.1411.
+[19]	F. Bei and S. Saepudin, “ANALISIS SENTIMEN APLIKASI TIKET ONLINE  DI PLAY STORE MENGGUNAKAN METODE SUPPORT VECTOR MACHINE (SVM),” 2021.
+[20]	M. Malikah, “Dinamika Pengaruh Musik pada Kesejahteraan Psikologis Peserta Didik: Analisis Literatur tentang Respons Neurologis dan Emosional,” J. Educ. Res., vol. 5, no. 4, pp. 5109–5118, Oct. 2024, doi: 10.37985/jer.v5i4.1751.
+[21]	N. A. Setiadi, “Dampak Musik Pada Perubahan Suasana Hati”.
+[22]	Setya Prihatining Tyas, Arfian Suryasuciramdhan, Alif Dava Mahesa, and Annisa Putria Racmawati, “Musik Sebagai Media Komunikasi Kesehatan Mental: Analisis Semiotika Lirik Lagu ‘Rehat’ Karya Kunto Aji,” SABER J. Tek. Inform. Sains Dan Ilmu Komun., vol. 2, no. 3, pp. 37–44, May 2024, doi: 10.59841/saber.v2i3.1223.
+[23]	B. Wicaksono and V. R. S. Nastiti, “Analisis Sentimen dalam Opini Publik di Chanel Youtube Indonesia Lawyers Club Tentang Isu Populer dengan Menggunakan Metode LSTM dan Bi-LSTM,” J. Algoritma, vol. 21, no. 2, pp. 241–251, Dec. 2024, doi: 10.33364/algoritma/v.21-2.1696.
+[24]	Muhammad Makmur Hasan and Joy Nashar Utamajaya, “Literature Review : Pemanfaatan YouTube dalam Pembelajaran,” Merkurius J. Ris. Sist. Inf. Dan Tek. Inform., vol. 2, no. 5, pp. 126–136, Jul. 2024, doi: 10.61132/merkurius.v2i5.295.
+[25]	M. I. Fanani and U. Malikha, “Analisis Semantik Lirik Lagu ‘Nina’ Karya Adnan Feast: Makna Kasih Sayang dan Perjuangan Orang Tua,” 2025.
+[26]	F. T. Saputra, Y. Nurhadryani, S. H. Wijaya, and D. Defina, “Analisis Sentimen Bahasa Indonesia pada Twitter Menggunakan Struktur Tree Berbasis Leksikon,” J. Teknol. Inf. Dan Ilmu Komput., vol. 8, no. 1, p. 135, Feb. 2021, doi: 10.25126/jtiik.0814133.
+[27]	A. Pannadhitthana Candra, “Analisis Data Menggunakan Python: Memperkenalkan Pandas dan NumPy,” J. Inf. Syst. Educ. Dev., vol. 3, no. 1, pp. 11–16, Mar. 2025, doi: 10.62386/jised.v3i1.118.
+[28]	N. Ramadhandi, “Penerapan Metode Natural Language Processing (NLP) Pada Question Answering System Untuk Media Informasi Mahasiswa Universitas Bhayangkara Jakarta Raya,” vol. 4, no. 2, 2023.
+[29]	C. V. Angkoso, M. A. N. Thrisna, B. D. Satoto, and A. Kusumaningsih, “Optimasi Klasifikasi Sentimen Menggunakan Random Forest dengan Preprocessing K-Means Clustering dan SMOTE,” vol. 10, no. 3, 2024.
+[30]	Y. A. Putri Gabriella, “Optimasi Penerimaan Siswa Baru Dengan Penerapan Algortima Text Mining Dan Tf-Idf,” J. Comput. Inform. Res., vol. 2, no. 3, pp. 110–117, Jul. 2023, doi: 10.47065/comforch.v2i3.941.
+[31]	F. S. Pamungkas and I. Kharisudin, “Analisis Sentimen dengan SVM, NAIVE BAYES dan KNN untuk Studi Tanggapan Masyarakat Indonesia Terhadap Pandemi Covid-19 pada Media Sosial Twitter,” vol. 4, 2021.
+[32]	T. Hasiholan Pinem and Z. Pratama Putra, “Evaluasi Kinerja Algoritma Klasifikasi Deep Learning dalam Prediksi Diabetes,” vol. 17, no. 1, pp. 17–28, 2025, doi: https://doi.org/10.22441%2Ffifo.2025.v17i1.003P-ISSN.
+[33]	E. Setiawan, R. Kurniawan, and Y. A. Wijaya, “OPTIMASI ATURAN ASOSIASI DENGAN SUPPORT CONFIDENCE PADA MARKET BASKET ANALYSIS UNTUK MENINGKATKAN AKURASI REKOMENDASI PRODUK,” Artif. Intell., vol. 03, no. 01, 2026.
+

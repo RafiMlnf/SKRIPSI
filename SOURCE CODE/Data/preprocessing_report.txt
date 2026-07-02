@@ -1,0 +1,112 @@
+======================================================================
+LAPORAN PREPROCESSING DATA KOMENTAR YOUTUBE
+Analisis Sentimen Lagu 'Arteri' - FEAST
+======================================================================
+
+Tanggal/Waktu: 2026-02-01 11:19:49
+File Input   : Data/comments_arteri_full.csv
+File Output  : Data/comments_preprocessed.csv
+
+----------------------------------------------------------------------
+KONFIGURASI PREPROCESSING
+----------------------------------------------------------------------
+Minimum kata per komentar    : 2
+Maximum kata per komentar    : 100
+Minimum karakter per komentar: 5
+Maximum karakter per komentar: 500
+
+----------------------------------------------------------------------
+TAHAPAN PREPROCESSING
+----------------------------------------------------------------------
+1. Case Folding (lowercase conversion)
+2. Data Cleaning (URL, mention, hashtag, timestamp, angka)
+3. Emoji & Emoticon Removal
+4. Spam Detection & Removal
+5. Lyrics Detection & Removal
+6. Punctuation Normalization
+7. Slang Word Normalization (Bahasa Indonesia)
+8. Stopwords Removal (Bahasa Indonesia)
+9. Stemming (Sastrawi)
+10. Quality Filtering (min/max length)
+11. Duplicate Removal
+
+----------------------------------------------------------------------
+STATISTIK PREPROCESSING
+----------------------------------------------------------------------
+Total komentar awal      : 1146
+Dihapus - Kosong         : 59
+Dihapus - Lirik          : 25
+Dihapus - Spam           : 79
+Dihapus - Terlalu pendek : 126
+Dihapus - Terlalu panjang: 1
+Dihapus - Duplikat       : 26
+----------------------------------------------------------------------
+Total dihapus            : 316
+Total komentar bersih    : 822
+Persentase tersisa       : 71.7%
+
+----------------------------------------------------------------------
+STATISTIK TEKS HASIL PREPROCESSING
+----------------------------------------------------------------------
+Rata-rata jumlah kata    : 6.5
+Minimum jumlah kata      : 2
+Maximum jumlah kata      : 59
+Rata-rata jumlah karakter: 38.0
+
+----------------------------------------------------------------------
+SAMPLE HASIL PREPROCESSING (10 PERTAMA)
+----------------------------------------------------------------------
+
+[1] Original:
+    konsepnya sama lah kek lagu bunny girl
+    Processed:
+    konsep sama kayak lagu bunny girl
+
+[2] Original:
+    my soooong anying
+    Processed:
+    my soooong anying
+
+[3] Original:
+    Dunia gak cuma pondok indah bas, ada juga  Cisauk Sepatan kresek Tenjo dan rajeg
+    Processed:
+    dunia pondok indah bas cisauk sepatan kresek tenjo rajeg
+
+[4] Original:
+    POV jule
+    Processed:
+    pov jule
+
+[5] Original:
+    keren banget bang
+    Processed:
+    keren banget
+
+[6] Original:
+    Suasana Japan Rock nya Kerasa... Asyik Banget...🤟😎
+    Processed:
+    suasana japan rock rasa asyik banget
+
+[7] Original:
+    Kereen, baru denger lagu ini. Nuansanya musik nya mirip im not okay nya MCR 👍
+    Processed:
+    kereen baru dengar lagu ini nuansa musik mirip im not okay my chemical romance
+
+[8] Original:
+    Ihh makannya kalo cegil jangan di cintai ugal-ugalan
+    Processed:
+    makan kalo cegil cinta ugalugalan
+
+[9] Original:
+    Reef dan musik kayak mirip mirip my chamical romance
+    Processed:
+    reef musik kayak mirip mirip my chamical romance
+
+[10] Original:
+    Di mv .feast lain tapi Arteri tetap Best
+    Processed:
+    mv feast lain arteri tetap best
+
+======================================================================
+END OF REPORT
+======================================================================
