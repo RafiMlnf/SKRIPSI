@@ -3,7 +3,7 @@ LAPORAN LABELING SENTIMEN
 Analisis Sentimen Lagu 'Arteri' - FEAST
 ======================================================================
 
-Tanggal/Waktu: 2026-02-01 11:21:42
+Tanggal/Waktu: 2026-07-08 09:25:03
 File Input   : Data/comments_preprocessed.csv
 File Output  : Data/comments_labeled.csv
 
@@ -25,43 +25,43 @@ Selain itu           : Netral
 ----------------------------------------------------------------------
 DISTRIBUSI SENTIMEN
 ----------------------------------------------------------------------
-Total komentar       : 822
-Positif              : 352 (42.8%)
-Negatif              : 81 (9.9%)
-Netral               : 389 (47.3%)
+Total komentar       : 1175
+Positif              : 308 (26.2%)
+Negatif              : 113 (9.6%)
+Netral               : 754 (64.2%)
 
 ----------------------------------------------------------------------
 STATISTIK SKOR SENTIMEN
 ----------------------------------------------------------------------
-Rata-rata skor       : 0.91
-Minimum skor         : -6.75
-Maximum skor         : 13.50
-Standar deviasi      : 1.89
+Rata-rata skor       : 0.36
+Minimum skor         : -7.60
+Maximum skor         : 10.00
+Standar deviasi      : 1.59
 
 ----------------------------------------------------------------------
 SAMPLE HASIL LABELING
 ----------------------------------------------------------------------
 
 [POSITIF] Contoh:
-  - dunia pondok indah bas cisauk sepatan kresek tenjo rajeg... (score: 3.0)
-  - keren banget... (score: 4.5)
-  - suasana japan rock rasa asyik banget... (score: 4.5)
-  - mv feast lain arteri tetap best... (score: 3.0)
-  - kok mirip my chemical romance im not ok... (score: 2.0)
+  - mantap... (score: 2.0)
+  - dengar suka lagu tau makna pas enggak sengaja lihat mv najis... (score: 4.0)
+  - rindu mz... (score: 1.0)
+  - my chemical romance im not okey... (score: 1.0)
+  - bingung resah banget lu inisial sayang mantan bilang kapai l... (score: 2.0)
 
 [NEGATIF] Contoh:
-  - ngedeketin perempuan friendly diseriusin kawan anggap hobi s... (score: -1.0)
-  - tiba ingat 500 days of summer parah sih... (score: -2.0)
-  - jadi meidiana gamau pilih jadi mila kocaggg... (score: -1.0)
-  - ingat bawa asa sama lonte... (score: -1.0)
-  - sesal pilih huekkk... (score: -1.0)
+  - kayak cerita kenal dunia pincut sakit sialannnn... (score: -2.0)
+  - kepharat kepharat... (score: -6.0)
+  - gawat gua mulai kenal wanita gincu... (score: -1.0)
+  - jangan kasih nyaman tidak buat sakit hati... (score: -3.0)
+  - nad kalau baca komentar kayak kurang obrol enggak nemu pas o... (score: -2.0)
 
 [NETRAL] Contoh:
-  - konsep sama kayak lagu bunny girl... (score: 0.0)
-  - my soooong anying... (score: 0.0)
-  - pov jule... (score: 0.0)
-  - kereen baru dengar lagu ini nuansa musik mirip im not okay m... (score: 0.0)
-  - makan kalo cegil cinta ugalugalan... (score: 0.0)
+  - not okay mcr wkwkwkkw sama persis awal akhir... (score: 0.0)
+  - eta mana suting... (score: 0.0)
+  - abang dokter itu nyata punya pacar jadi jahat... (score: 0.0)
+  - not okay my chemical romance shitttt katro... (score: 0.0)
+  - not okay by my chemical romance... (score: 0.0)
 
 ----------------------------------------------------------------------
 LABEL ENCODING UNTUK LSTM

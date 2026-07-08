@@ -74,12 +74,10 @@ SVM dipilih sebagai metode utama karena:
 │   └── sentiment_distribution.png        # Visualisasi distribusi
 │
 ├── 📁 Scripts/                           # Script Python
-│   ├── youtube_scraper.py                # Script utama scraping
-│   ├── run_scraper_simple.py             # Runner scraping
-│   ├── scrape_1000.py                    # Script untuk 1000+ komentar
-│   ├── preprocessing.py                  # Script preprocessing
-│   ├── labeling.py                       # Script labeling sentimen
-│   └── svm_model.py                      # ⭐ Script model SVM
+│   ├── step_01_youtube_scraper.py        # Script utama scraping
+│   ├── step_02_preprocessing.py          # Script preprocessing
+│   ├── step_03_labeling.py               # Script labeling sentimen
+│   └── step_04_svm_model.py              # ⭐ Script model SVM
 │
 ├── 📁 Notebooks/                         # Jupyter Notebooks
 │   └── Analisis_Sentimen_SVM.ipynb       # ⭐ NOTEBOOK UTAMA
@@ -107,7 +105,7 @@ Mengumpulkan komentar dari video YouTube lagu "Arteri" menggunakan library `yout
 - Python 3.12
 - Library: `youtube-comment-downloader`, `pandas`, `tqdm`
 
-### 3.3 Script: `Scripts/scrape_1000.py`
+### 3.3 Script: `Scripts/step_01_youtube_scraper.py`
 
 ### 3.4 Hasil Scraping
 
@@ -132,7 +130,7 @@ no,author,text,time,likes,replies,is_reply
 ### 4.1 Deskripsi
 Membersihkan dan menormalisasi data komentar agar siap untuk analisis sentimen.
 
-### 4.2 Script: `Scripts/preprocessing.py`
+### 4.2 Script: `Scripts/step_02_preprocessing.py`
 
 ### 4.3 Tahapan Preprocessing
 
@@ -169,7 +167,7 @@ Membersihkan dan menormalisasi data komentar agar siap untuk analisis sentimen.
 ### 5.1 Deskripsi
 Melabeli setiap komentar dengan kategori sentimen menggunakan metode **Lexicon-Based**.
 
-### 5.2 Script: `Scripts/labeling.py`
+### 5.2 Script: `Scripts/step_03_labeling.py`
 
 ### 5.3 Metode Labeling
 - Lexicon-Based Sentiment Analysis
@@ -313,16 +311,16 @@ jupyter notebook
 cd "e:\Kuliah\01. SEMPRO\SOURCE CODE"
 
 # 1. Scraping (jika belum ada data)
-py -3 Scripts/scrape_1000.py
+py -3 Scripts/step_01_youtube_scraper.py
 
 # 2. Preprocessing
-py -3 Scripts/preprocessing.py
+py -3 Scripts/step_02_preprocessing.py
 
 # 3. Labeling
-py -3 Scripts/labeling.py
+py -3 Scripts/step_03_labeling.py
 
 # 4. Training SVM
-py -3 Scripts/svm_model.py
+py -3 Scripts/step_04_svm_model.py
 ```
 
 ---

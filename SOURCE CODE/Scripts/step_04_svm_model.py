@@ -28,6 +28,19 @@ import os
 import pickle
 import joblib
 from datetime import datetime
+from scipy.sparse import hstack, csr_matrix
+
+# Import preprocessing & labeling modules
+try:
+    from step_02_preprocessing import TextPreprocessor
+    from step_03_labeling import SentimentLabeler
+except ImportError:
+    try:
+        from Scripts.step_02_preprocessing import TextPreprocessor
+        from Scripts.step_03_labeling import SentimentLabeler
+    except ImportError:
+        TextPreprocessor = None
+        SentimentLabeler = None
 
 # ============================================================================
 # KONFIGURASI
@@ -46,12 +59,12 @@ class Config:
     # TF-IDF Configuration
     MAX_FEATURES = 5000           # Vocabulary size
     NGRAM_RANGE = (1, 2)          # Unigram + Bigram
-    MIN_DF = 2                    # Minimum document frequency
+    MIN_DF = 1                    # Set ke 1 agar kata-kata negatif langka tidak terfilter
     MAX_DF = 0.95                 # Maximum document frequency
     
     # SVM Configuration
     KERNEL = 'linear'             # Kernel type: linear, rbf, poly
-    C_VALUES = [0.1, 1, 10]       # Regularization parameter untuk GridSearch
+    C_VALUES = [0.1, 0.5, 1.0]    # Regularization parameter untuk GridSearch
     GAMMA_VALUES = ['scale', 'auto']  # Gamma untuk RBF kernel
     
     # Training Configuration
@@ -70,7 +83,7 @@ class Config:
 
 def load_data(config):
     """
-    Memuat data dari file CSV
+    Memuat data dari file CSV (teks, label, dan skor sentimen Lexicon)
     """
     print("\n" + "="*70)
     print("MEMUAT DATA")
@@ -80,8 +93,9 @@ def load_data(config):
     df = pd.read_csv(config.INPUT_FILE)
     print(f"[INFO] Total data: {len(df)}")
     
-    # Get texts and labels
+    # Get texts, labels, and lexicon scores
     texts = df['text_processed'].astype(str).values
+    scores = df['sentiment_score'].values
     labels = df['sentiment_label'].values
     
     # Print distribution
@@ -90,10 +104,10 @@ def load_data(config):
     for u, c in zip(unique, counts):
         print(f"       {config.LABEL_NAMES[u]}: {c} ({c/len(labels)*100:.1f}%)")
     
-    return texts, labels, df
+    return texts, labels, scores, df
 
 
-def split_data(X, y, config):
+def split_data(X, y, scores, config):
     """
     Split data menjadi train dan test
     """
@@ -101,8 +115,8 @@ def split_data(X, y, config):
     
     print("\n[INFO] Membagi data...")
     
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, 
+    X_train, X_test, y_train, y_test, scores_train, scores_test = train_test_split(
+        X, y, scores,
         test_size=config.TEST_SIZE, 
         random_state=config.RANDOM_STATE,
         stratify=y
@@ -111,7 +125,7 @@ def split_data(X, y, config):
     print(f"       Train: {len(X_train)} ({len(X_train)/len(X)*100:.1f}%)")
     print(f"       Test: {len(X_test)} ({len(X_test)/len(X)*100:.1f}%)")
     
-    return X_train, X_test, y_train, y_test
+    return X_train, X_test, y_train, y_test, scores_train, scores_test
 
 
 # ============================================================================
@@ -137,9 +151,18 @@ def create_tfidf_vectorizer(config):
     return vectorizer
 
 
+def combine_features(tfidf_matrix, scores_array):
+    """
+    Menggabungkan matriks TF-IDF dengan skor sentimen Lexicon
+    sebagai fitur tambahan numerik.
+    """
+    scores_col = csr_matrix(scores_array.reshape(-1, 1))
+    return hstack([tfidf_matrix, scores_col])
+
+
 def extract_features(texts_train, texts_test, config, vectorizer=None):
     """
-    Ekstraksi fitur TF-IDF
+    Ekstraksi fitur TF-IDF (hanya TF-IDF sesuai metodologi skripsi asli)
     """
     print("\n" + "="*70)
     print("EKSTRAKSI FITUR TF-IDF")
@@ -154,16 +177,10 @@ def extract_features(texts_train, texts_test, config, vectorizer=None):
     print(f"[INFO] Transformasi data test...")
     X_test_tfidf = vectorizer.transform(texts_test)
     
-    print(f"\n[INFO] Hasil TF-IDF:")
-    print(f"       Vocabulary size: {len(vectorizer.vocabulary_)}")
+    print(f"\n[INFO] Hasil Ekstraksi Fitur:")
+    print(f"       Vocabulary size  : {len(vectorizer.vocabulary_)}")
     print(f"       Train matrix shape: {X_train_tfidf.shape}")
-    print(f"       Test matrix shape: {X_test_tfidf.shape}")
-    
-    # Show top features
-    feature_names = vectorizer.get_feature_names_out()
-    print(f"\n[INFO] Contoh fitur (10 pertama):")
-    for feat in feature_names[:10]:
-        print(f"       - {feat}")
+    print(f"       Test matrix shape : {X_test_tfidf.shape}")
     
     return X_train_tfidf, X_test_tfidf, vectorizer
 
@@ -186,14 +203,17 @@ def build_svm_model(config, use_grid_search=True):
     if use_grid_search:
         print("\n[INFO] Menggunakan GridSearchCV untuk hyperparameter tuning...")
         
-        # Base SVM model
-        svm_base = SVC(random_state=config.RANDOM_STATE, probability=True)
+        # Base SVM model (use CalibratedClassifierCV for probability instead of deprecated probability=True)
+        from sklearn.calibration import CalibratedClassifierCV
+        svm_base = CalibratedClassifierCV(
+            SVC(random_state=config.RANDOM_STATE, class_weight='balanced'),
+            cv=3
+        )
         
-        # Parameter grid
+        # Parameter grid (prefix dengan estimator__ agar GridSearchCV mengarahkan ke SVC di dalam CalibratedClassifierCV)
         param_grid = {
-            'kernel': ['linear', 'rbf'],
-            'C': config.C_VALUES,
-            'gamma': config.GAMMA_VALUES
+            'estimator__kernel': ['linear'],
+            'estimator__C': config.C_VALUES
         }
         
         # GridSearchCV
@@ -213,38 +233,75 @@ def build_svm_model(config, use_grid_search=True):
         
     else:
         print("\n[INFO] Menggunakan SVM dengan parameter default...")
-        model = SVC(
-            kernel=config.KERNEL,
-            C=1.0,
-            gamma='scale',
-            random_state=config.RANDOM_STATE,
-            probability=True
+        from sklearn.calibration import CalibratedClassifierCV
+        model = CalibratedClassifierCV(
+            SVC(
+                kernel=config.KERNEL,
+                C=1.0,
+                gamma='scale',
+                random_state=config.RANDOM_STATE,
+                class_weight='balanced'
+            ),
+            cv=3
         )
     
     return model
 
 
+def apply_smote(X_train, y_train):
+    """
+    Menyeimbangkan dataset menggunakan Random Oversampling (ROS).
+    Metode ini menduplikasi sampel dari kelas minoritas (Negatif/Positif) agar
+    seimbang dengan kelas mayoritas (Netral).
+    ROS dipilih karena mempertahankan keaslian fitur (tidak mendilusi fitur TF-IDF kata-kata langka
+    seperti 'bosan' atau 'jelek' seperti yang biasa terjadi pada SMOTE di ruang berdimensi tinggi).
+    """
+    label_names = ['negatif', 'netral', 'positif']
+    unique, counts = np.unique(y_train, return_counts=True)
+    
+    print("\n[INFO] Menerapkan Random Oversampling untuk penyeimbangan kelas...")
+    print(f"       Distribusi SEBELUM Oversampling:")
+    for u, c in zip(unique, counts):
+        print(f"         {label_names[u]}: {c}")
+        
+    # Implementasi Random Oversampling manual
+    np.random.seed(42)
+    max_count = counts.max()
+    
+    indices_to_keep = []
+    for label in unique:
+        label_indices = np.where(y_train == label)[0]
+        if len(label_indices) == max_count:
+            indices_to_keep.extend(label_indices)
+        else:
+            chosen = np.random.choice(label_indices, size=max_count, replace=True)
+            indices_to_keep.extend(chosen)
+            
+    indices_to_keep = np.array(indices_to_keep)
+    np.random.shuffle(indices_to_keep)
+    
+    X_resampled = X_train[indices_to_keep]
+    y_resampled = y_train[indices_to_keep]
+    
+    unique_res, counts_res = np.unique(y_resampled, return_counts=True)
+    print(f"       Distribusi SESUDAH Random Oversampling:")
+    for u, c in zip(unique_res, counts_res):
+        print(f"         {label_names[u]}: {c}")
+    print(f"       Total data training: {len(y_train)} → {len(y_resampled)}")
+    
+    return X_resampled, y_resampled
+
+
 def train_model(model, X_train, y_train, config):
     """
-    Training model SVM
+    Training model SVM menggunakan fitur TF-IDF (tanpa SMOTE)
     """
-    from sklearn.utils.class_weight import compute_class_weight
-    
     print("\n" + "="*70)
     print("TRAINING MODEL SVM")
     print("="*70)
     
-    # Compute class weights for imbalanced data
-    class_weights = compute_class_weight(
-        class_weight='balanced',
-        classes=np.unique(y_train),
-        y=y_train
-    )
-    class_weight_dict = dict(enumerate(class_weights))
-    print(f"\n[INFO] Class weights: {class_weight_dict}")
-    
     print(f"\n[INFO] Memulai training...")
-    print(f"       Train samples: {X_train.shape[0]}")
+    print(f"       Train samples : {X_train.shape[0]}")
     print(f"       Features: {X_train.shape[1]}")
     
     # Training
@@ -503,12 +560,15 @@ def generate_report(config, eval_results, training_time, model, vectorizer, outp
 # PREDICTION FUNCTION
 # ============================================================================
 
-def predict_sentiment(text, model, vectorizer, config):
+def predict_sentiment(text, model, vectorizer, config, preprocessor=None, labeler=None):
     """
-    Prediksi sentimen untuk teks baru
+    Prediksi sentimen untuk teks baru menggunakan model SVM + TF-IDF
     """
     # Preprocess
-    text_clean = text.lower().strip()
+    if preprocessor is not None:
+        text_clean = preprocessor.preprocess_single(text)
+    else:
+        text_clean = text.lower().strip()
     
     # Transform dengan TF-IDF
     text_tfidf = vectorizer.transform([text_clean])
@@ -583,17 +643,20 @@ def main():
     # Check input file
     if not os.path.exists(config.INPUT_FILE):
         print(f"[ERROR] File tidak ditemukan: {config.INPUT_FILE}")
-        print("        Jalankan labeling.py terlebih dahulu!")
+        print("        Jalankan step_03_labeling.py terlebih dahulu!")
         return
     
     # Load data
-    texts, labels, df = load_data(config)
+    texts, labels, scores, df = load_data(config)
     
     # Split data
-    X_train_text, X_test_text, y_train, y_test = split_data(texts, labels, config)
+    X_train_text, X_test_text, y_train, y_test, _, _ = split_data(texts, labels, scores, config)
     
     # Extract TF-IDF features
     X_train, X_test, vectorizer = extract_features(X_train_text, X_test_text, config)
+    
+    # Apply SMOTE / Random Oversampling to balance training data
+    X_train, y_train = apply_smote(X_train, y_train)
     
     # Build model with GridSearchCV
     model = build_svm_model(config, use_grid_search=True)
@@ -616,21 +679,35 @@ def main():
     # Generate report
     generate_report(config, eval_results, training_time, model, vectorizer, config.REPORT_FILE)
     
+    # Initialize preprocessor & labeler
+    preprocessor = None
+    labeler = None
+    if TextPreprocessor is not None:
+        print("\n[INFO] Menginisialisasi TextPreprocessor (Sastrawi)...")
+        preprocessor = TextPreprocessor()
+        preprocessor._init_stemmer()
+    if SentimentLabeler is not None:
+        print("[INFO] Menginisialisasi SentimentLabeler...")
+        labeler = SentimentLabeler()
+    
     # Demo prediction
     print("\n" + "="*70)
     print("DEMO PREDIKSI")
     print("="*70)
     
     test_texts = [
-        "lagu ini bagus banget keren",
-        "jelek ga suka sama sekali",
-        "baru pertama denger lagu ini",
-        "relate banget sama kehidupan gue",
-        "mirip MCR I'm not okay"
+        "lagu ini bagus banget keren",          # jelas positif
+        "jelek ga suka sama sekali",            # jelas negatif (negasi)
+        "baru pertama denger lagu ini",         # netral
+        "relate banget sama kehidupan gue",     # positif
+        "lagunya membosankan",                  # negatif
+        "mirip MCR I'm not okay",               # netral/positif
+        "tidak suka dengan nadanya",            # negatif (negasi eksplisit)
+        "merinding dengernya",                  # positif
     ]
     
     for text in test_texts:
-        result = predict_sentiment(text, model, vectorizer, config)
+        result = predict_sentiment(text, model, vectorizer, config, preprocessor=preprocessor, labeler=labeler)
         print(f"\nTeks: '{text}'")
         print(f"Sentimen: {result['sentiment']} (confidence: {result['confidence']:.2%})")
     

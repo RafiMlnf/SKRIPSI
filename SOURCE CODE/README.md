@@ -36,13 +36,13 @@ jupyter notebook
 ### 3. Atau Jalankan Script
 ```bash
 # Preprocessing
-py -3 Scripts/preprocessing.py
+py -3 Scripts/step_02_preprocessing.py
 
 # Labeling
-py -3 Scripts/labeling.py
+py -3 Scripts/step_03_labeling.py
 
 # Training SVM
-py -3 Scripts/svm_model.py
+py -3 Scripts/step_04_svm_model.py
 ```
 
 ## 🔧 Metodologi

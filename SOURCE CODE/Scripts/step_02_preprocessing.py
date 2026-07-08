@@ -63,7 +63,7 @@ class Config:
     REPORT_FILE = "Data/preprocessing_report.txt"
     
     # Quality thresholds
-    MIN_WORDS = 2           # Minimum kata dalam komentar
+    MIN_WORDS = 1           # Minimum kata dalam komentar
     MAX_WORDS = 100         # Maximum kata (filter lirik/spam panjang)
     MIN_CHARS = 5           # Minimum karakter
     MAX_CHARS = 500         # Maximum karakter
@@ -278,13 +278,12 @@ STOPWORDS_ID = {
     'samping', 'kanan', 'kiri', 'sekitar', 'sekeliling',
     
     # Kata keterangan
-    'sangat', 'amat', 'sekali', 'paling', 'lebih', 'kurang', 'agak', 'cukup',
+    'sangat', 'amat', 'sekali', 'paling', 'lebih', 'agak', 'cukup',
     'hampir', 'nyaris', 'kira-kira', 'seolah-olah', 'seperti', 'bagaikan',
-    'sudah', 'telah', 'pernah', 'belum', 'sedang', 'masih', 'akan', 'bakal',
+    'sudah', 'telah', 'pernah', 'sedang', 'masih', 'akan', 'bakal',
     'harus', 'wajib', 'perlu', 'mesti', 'boleh', 'dapat', 'bisa', 'mampu',
     'mau', 'ingin', 'hendak',
-    'tidak', 'bukan', 'jangan', 'belum', 'tanpa',
-    'ya', 'tidak', 'bukan', 'iya', 'enggak',
+    'ya', 'iya',
     'saja', 'hanya', 'cuma', 'melulu', 'doang',
     'juga', 'pun', 'pula', 'bahkan', 'malah', 'malahan',
     'lagi', 'masih', 'terus', 'selalu', 'senantiasa', 'kerap', 'sering', 'kadang',

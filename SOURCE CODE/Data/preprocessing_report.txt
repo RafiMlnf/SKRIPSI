@@ -3,14 +3,14 @@ LAPORAN PREPROCESSING DATA KOMENTAR YOUTUBE
 Analisis Sentimen Lagu 'Arteri' - FEAST
 ======================================================================
 
-Tanggal/Waktu: 2026-02-01 11:19:49
+Tanggal/Waktu: 2026-07-08 09:32:45
 File Input   : Data/comments_arteri_full.csv
 File Output  : Data/comments_preprocessed.csv
 
 ----------------------------------------------------------------------
 KONFIGURASI PREPROCESSING
 ----------------------------------------------------------------------
-Minimum kata per komentar    : 2
+Minimum kata per komentar    : 1
 Maximum kata per komentar    : 100
 Minimum karakter per komentar: 5
 Maximum karakter per komentar: 500
@@ -33,79 +33,79 @@ TAHAPAN PREPROCESSING
 ----------------------------------------------------------------------
 STATISTIK PREPROCESSING
 ----------------------------------------------------------------------
-Total komentar awal      : 1146
-Dihapus - Kosong         : 59
-Dihapus - Lirik          : 25
-Dihapus - Spam           : 79
-Dihapus - Terlalu pendek : 126
+Total komentar awal      : 1531
+Dihapus - Kosong         : 83
+Dihapus - Lirik          : 29
+Dihapus - Spam           : 108
+Dihapus - Terlalu pendek : 49
 Dihapus - Terlalu panjang: 1
-Dihapus - Duplikat       : 26
+Dihapus - Duplikat       : 77
 ----------------------------------------------------------------------
-Total dihapus            : 316
-Total komentar bersih    : 822
-Persentase tersisa       : 71.7%
+Total dihapus            : 347
+Total komentar bersih    : 1175
+Persentase tersisa       : 76.7%
 
 ----------------------------------------------------------------------
 STATISTIK TEKS HASIL PREPROCESSING
 ----------------------------------------------------------------------
-Rata-rata jumlah kata    : 6.5
-Minimum jumlah kata      : 2
-Maximum jumlah kata      : 59
-Rata-rata jumlah karakter: 38.0
+Rata-rata jumlah kata    : 6.3
+Minimum jumlah kata      : 1
+Maximum jumlah kata      : 74
+Rata-rata jumlah karakter: 37.1
 
 ----------------------------------------------------------------------
 SAMPLE HASIL PREPROCESSING (10 PERTAMA)
 ----------------------------------------------------------------------
 
 [1] Original:
-    konsepnya sama lah kek lagu bunny girl
+    i'm not okay MCR? wkwkwkkw sama persis dari awal sampe akhir
     Processed:
-    konsep sama kayak lagu bunny girl
+    not okay mcr wkwkwkkw sama persis awal akhir
 
 [2] Original:
-    my soooong anying
+    mantap
     Processed:
-    my soooong anying
+    mantap
 
 [3] Original:
-    Dunia gak cuma pondok indah bas, ada juga  Cisauk Sepatan kresek Tenjo dan rajeg
+    eta dimana suting na a?
     Processed:
-    dunia pondok indah bas cisauk sepatan kresek tenjo rajeg
+    eta mana suting
 
 [4] Original:
-    POV jule
+    Abang dokter itu, ternyata punya pacar dan aku hanya jd orang ke 3. Jahatnya dia
     Processed:
-    pov jule
+    abang dokter itu nyata punya pacar jadi jahat
 
 [5] Original:
-    keren banget bang
+    i'm not okay MCR ohh shitttt 🤣 katro
     Processed:
-    keren banget
+    not okay my chemical romance shitttt katro
 
 [6] Original:
-    Suasana Japan Rock nya Kerasa... Asyik Banget...🤟😎
+    dulu sering denger sampai suka ini lagu tanpa tau maknanya, tapi pas gk sengaja liat MV nya " NAJIS,...
     Processed:
-    suasana japan rock rasa asyik banget
+    dengar suka lagu tau makna pas enggak sengaja lihat mv najis nyata alam gua hati isyarat dia nyaman satu lingkup teman lu kecil makanya enggak lihat rupa enggak salah jadi diri sendiri lu sendiri aneh ngeframing demen sama lu wkwkkw
 
 [7] Original:
-    Kereen, baru denger lagu ini. Nuansanya musik nya mirip im not okay nya MCR 👍
+    I'm not Okay by My Chemical Romance
     Processed:
-    kereen baru dengar lagu ini nuansa musik mirip im not okay my chemical romance
+    not okay by my chemical romance
 
 [8] Original:
-    Ihh makannya kalo cegil jangan di cintai ugal-ugalan
+    Aku rindu kamu Mz, J❤
     Processed:
-    makan kalo cegil cinta ugalugalan
+    rindu mz
 
 [9] Original:
-    Reef dan musik kayak mirip mirip my chamical romance
+    Setelah menganal cewe itu aku tau arti lagu ini
     Processed:
-    reef musik kayak mirip mirip my chamical romance
+    telah anal cewek tau arti lagu
 
 [10] Original:
-    Di mv .feast lain tapi Arteri tetap Best
+    Kita pernah menjadi laki laki itu .
     Processed:
-    mv feast lain arteri tetap best
+    jadi laki laki
 
 ======================================================================
 END OF REPORT
