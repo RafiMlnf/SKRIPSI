@@ -53,6 +53,7 @@ class Config:
     INPUT_FILE = "Data/comments_labeled.csv"
     OUTPUT_DIR = "Output"
     MODEL_FILE = "Output/svm_sentiment_model.pkl"
+    LR_MODEL_FILE = "Output/logistic_regression_model.pkl"
     VECTORIZER_FILE = "Output/tfidf_vectorizer.pkl"
     REPORT_FILE = "Output/model_report.txt"
     
@@ -93,10 +94,10 @@ def load_data(config):
     df = pd.read_csv(config.INPUT_FILE)
     print(f"[INFO] Total data: {len(df)}")
     
-    # Get texts, labels, and lexicon scores
-    texts = df['text_processed'].astype(str).values
-    scores = df['sentiment_score'].values
-    labels = df['sentiment_label'].values
+    # Get texts, labels, and lexicon scores (cast explicitly to numpy array to avoid Arrow indexing issues)
+    texts = np.array(df['text_processed'].astype(str))
+    scores = np.array(df['sentiment_score'].astype(float))
+    labels = np.array(df['sentiment_label'].astype(int))
     
     # Print distribution
     print("\n[INFO] Distribusi label:")
@@ -287,7 +288,7 @@ def apply_smote(X_train, y_train):
     print(f"       Distribusi SESUDAH Random Oversampling:")
     for u, c in zip(unique_res, counts_res):
         print(f"         {label_names[u]}: {c}")
-    print(f"       Total data training: {len(y_train)} → {len(y_resampled)}")
+    print(f"       Total data training: {len(y_train)} -> {len(y_resampled)}")
     
     return X_resampled, y_resampled
 
@@ -434,61 +435,80 @@ def plot_confusion_matrix(cm, config, output_path='Output/confusion_matrix.png')
         print(f"[WARNING] Library tidak terinstall: {e}. Confusion matrix dilewati.")
 
 
-def plot_metrics_comparison(eval_results, output_path='Output/metrics_comparison.png'):
+def plot_metrics_comparison(svm_results, lr_results, output_path='Output/metrics_comparison.png'):
     """
-    Plot perbandingan metrik evaluasi
+    Plot perbandingan metrik evaluasi komparatif (SVM vs Logistic Regression)
     """
     try:
         import matplotlib.pyplot as plt
+        import numpy as np
         
-        metrics = ['Accuracy', 'Precision', 'Recall', 'F1 (Macro)', 'F1 (Weighted)']
-        values = [
-            eval_results['accuracy'] * 100,
-            eval_results['precision'] * 100,
-            eval_results['recall'] * 100,
-            eval_results['f1_macro'] * 100,
-            eval_results['f1_weighted'] * 100
+        metrics = ['Accuracy', 'Precision', 'Recall', 'F1 (Weighted)']
+        svm_values = [
+            svm_results['accuracy'] * 100,
+            svm_results['precision'] * 100,
+            svm_results['recall'] * 100,
+            svm_results['f1_weighted'] * 100
+        ]
+        lr_values = [
+            lr_results['accuracy'] * 100,
+            lr_results['precision'] * 100,
+            lr_results['recall'] * 100,
+            lr_results['f1_weighted'] * 100
         ]
         
-        colors = ['#2ecc71', '#3498db', '#9b59b6', '#e74c3c', '#f39c12']
+        x = np.arange(len(metrics))
+        width = 0.35  # width of the bars
         
         fig, ax = plt.subplots(figsize=(10, 6))
-        bars = ax.bar(metrics, values, color=colors, edgecolor='black', linewidth=1.2)
         
-        # Add value labels on bars
-        for bar, val in zip(bars, values):
-            ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1, 
-                    f'{val:.2f}%', ha='center', va='bottom', fontsize=11, fontweight='bold')
+        rects1 = ax.bar(x - width/2, svm_values, width, label='SVM (Linear)', color='#2563eb', edgecolor='black', linewidth=1.1)
+        rects2 = ax.bar(x + width/2, lr_values, width, label='Logistic Regression', color='#f97316', edgecolor='black', linewidth=1.1)
+        
+        # Add values labels on top of bars
+        def autolabel(rects):
+            for rect in rects:
+                height = rect.get_height()
+                ax.annotate(f'{height:.2f}%',
+                            xy=(rect.get_x() + rect.get_width() / 2, height),
+                            xytext=(0, 3),  # 3 points vertical offset
+                            textcoords="offset points",
+                            ha='center', va='bottom', fontsize=9, fontweight='bold')
+                            
+        autolabel(rects1)
+        autolabel(rects2)
         
         ax.set_ylim(0, 110)
         ax.set_ylabel('Score (%)', fontsize=12)
-        ax.set_title('Metrik Evaluasi Model SVM\nAnalisis Sentimen "Arteri" - .FEAST', 
-                     fontsize=14, fontweight='bold')
+        ax.set_title('Perbandingan Performa Evaluasi Model\nSVM vs Logistic Regression', fontsize=14, fontweight='bold')
+        ax.set_xticks(x)
+        ax.set_xticklabels(metrics)
+        ax.legend(loc='lower right')
         ax.grid(axis='y', alpha=0.3)
         
         plt.tight_layout()
         plt.savefig(output_path, dpi=150, bbox_inches='tight')
         plt.close()
         
-        print(f"[INFO] Grafik metrik tersimpan: {output_path}")
+        print(f"[INFO] Grafik komparatif metrik tersimpan: {output_path}")
         
-    except ImportError as e:
-        print(f"[WARNING] Library tidak terinstall: {e}. Grafik dilewati.")
+    except Exception as e:
+        print(f"[WARNING] Gagal membuat grafik metrik: {e}")
 
 
 # ============================================================================
 # GENERATE REPORT
 # ============================================================================
 
-def generate_report(config, eval_results, training_time, model, vectorizer, output_path):
+def generate_report(config, svm_results, lr_results, training_time, lr_training_time, model, vectorizer, output_path):
     """
-    Generate laporan lengkap model
+    Generate laporan lengkap komparasi model SVM vs Logistic Regression
     """
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     report = []
     report.append("="*70)
-    report.append("LAPORAN MODEL SVM ANALISIS SENTIMEN")
+    report.append("LAPORAN KOMPARASI MODEL SENTIMEN (SVM VS LOGISTIC REGRESSION)")
     report.append("Lagu 'Arteri' - .FEAST")
     report.append("="*70)
     report.append(f"\nTanggal/Waktu: {timestamp}")
@@ -504,10 +524,8 @@ def generate_report(config, eval_results, training_time, model, vectorizer, outp
     report.append(f"Vocabulary Size     : {len(vectorizer.vocabulary_)}")
     
     report.append("\n" + "-"*70)
-    report.append("KONFIGURASI SVM")
+    report.append("KONFIGURASI MODEL SVM")
     report.append("-"*70)
-    
-    # Get best params if GridSearchCV
     if hasattr(model, 'best_params_'):
         report.append("(Best parameters dari GridSearchCV)")
         for key, value in model.best_params_.items():
@@ -517,32 +535,52 @@ def generate_report(config, eval_results, training_time, model, vectorizer, outp
         report.append(f"Kernel              : {config.KERNEL}")
         report.append(f"C                   : 1.0")
         report.append(f"Gamma               : scale")
-    
-    report.append(f"\nTraining Time       : {training_time:.2f} seconds")
-    
-    report.append("\n" + "-"*70)
-    report.append("HASIL EVALUASI")
-    report.append("-"*70)
-    report.append(f"Accuracy            : {eval_results['accuracy']*100:.2f}%")
-    report.append(f"Precision (Weighted): {eval_results['precision']*100:.2f}%")
-    report.append(f"Recall (Weighted)   : {eval_results['recall']*100:.2f}%")
-    report.append(f"F1 Score (Macro)    : {eval_results['f1_macro']*100:.2f}%")
-    report.append(f"F1 Score (Weighted) : {eval_results['f1_weighted']*100:.2f}%")
+    report.append(f"Training Time       : {training_time:.2f} seconds")
     
     report.append("\n" + "-"*70)
-    report.append("CONFUSION MATRIX")
+    report.append("KONFIGURASI MODEL LOGISTIC REGRESSION")
     report.append("-"*70)
-    cm = eval_results['confusion_matrix']
+    report.append("Regularization      : L2 (Ridge)")
+    report.append("C                   : 1.0 (default)")
+    report.append("Max Iterations      : 1000")
+    report.append(f"Training Time       : {lr_training_time:.2f} seconds")
+    
+    report.append("\n" + "-"*70)
+    report.append("PERBANDINGAN METRIK EVALUASI")
+    report.append("-"*70)
+    report.append(f"{'Metrik':20s} | {'SVM (Linear)':15s} | {'Logistic Reg.':15s}")
+    report.append("-"*70)
+    report.append(f"{'Accuracy':20s} | {svm_results['accuracy']*100:13.2f}% | {lr_results['accuracy']*100:13.2f}%")
+    report.append(f"{'Precision (Weighted)':20s} | {svm_results['precision']*100:13.2f}% | {lr_results['precision']*100:13.2f}%")
+    report.append(f"{'Recall (Weighted)':20s} | {svm_results['recall']*100:13.2f}% | {lr_results['recall']*100:13.2f}%")
+    report.append(f"{'F1 Score (Macro)':20s} | {svm_results['f1_macro']*100:13.2f}% | {lr_results['f1_macro']*100:13.2f}%")
+    report.append(f"{'F1 Score (Weighted)':20s} | {svm_results['f1_weighted']*100:13.2f}% | {lr_results['f1_weighted']*100:13.2f}%")
+    
+    report.append("\n" + "-"*70)
+    report.append("CONFUSION MATRIX - SVM")
+    report.append("-"*70)
+    cm_svm = svm_results['confusion_matrix']
     report.append("                Predicted")
     report.append("              Neg  Net  Pos")
-    report.append(f"Actual Neg    {cm[0][0]:3d}  {cm[0][1]:3d}  {cm[0][2]:3d}")
-    report.append(f"       Net    {cm[1][0]:3d}  {cm[1][1]:3d}  {cm[1][2]:3d}")
-    report.append(f"       Pos    {cm[2][0]:3d}  {cm[2][1]:3d}  {cm[2][2]:3d}")
+    report.append(f"Actual Neg    {cm_svm[0][0]:3d}  {cm_svm[0][1]:3d}  {cm_svm[0][2]:3d}")
+    report.append(f"       Net    {cm_svm[1][0]:3d}  {cm_svm[1][1]:3d}  {cm_svm[1][2]:3d}")
+    report.append(f"       Pos    {cm_svm[2][0]:3d}  {cm_svm[2][1]:3d}  {cm_svm[2][2]:3d}")
+    
+    report.append("\n" + "-"*70)
+    report.append("CONFUSION MATRIX - LOGISTIC REGRESSION")
+    report.append("-"*70)
+    cm_lr = lr_results['confusion_matrix']
+    report.append("                Predicted")
+    report.append("              Neg  Net  Pos")
+    report.append(f"Actual Neg    {cm_lr[0][0]:3d}  {cm_lr[0][1]:3d}  {cm_lr[0][2]:3d}")
+    report.append(f"       Net    {cm_lr[1][0]:3d}  {cm_lr[1][1]:3d}  {cm_lr[1][2]:3d}")
+    report.append(f"       Pos    {cm_lr[2][0]:3d}  {cm_lr[2][1]:3d}  {cm_lr[2][2]:3d}")
     
     report.append("\n" + "-"*70)
     report.append("FILE OUTPUT")
     report.append("-"*70)
-    report.append(f"Model               : {config.MODEL_FILE}")
+    report.append(f"SVM Model           : {config.MODEL_FILE}")
+    report.append(f"LR Model            : {config.LR_MODEL_FILE}")
     report.append(f"Vectorizer          : {config.VECTORIZER_FILE}")
     report.append(f"Report              : {config.REPORT_FILE}")
     
@@ -631,11 +669,11 @@ def load_model(config):
 def main():
     """Main function"""
     print("""
-    ╔═══════════════════════════════════════════════════════════════════╗
-    ║     MODEL SUPPORT VECTOR MACHINE (SVM)                            ║
-    ║     ANALISIS SENTIMEN LAGU "ARTERI" - .FEAST                      ║
-    ║     Machine Learning dengan Scikit-learn                          ║
-    ╚═══════════════════════════════════════════════════════════════════╝
+    =====================================================================
+          MODEL SUPPORT VECTOR MACHINE (SVM)
+          ANALISIS SENTIMEN LAGU "ARTERI" - .FEAST
+          Machine Learning dengan Scikit-learn
+    =====================================================================
     """)
     
     config = Config()
@@ -664,20 +702,42 @@ def main():
     # Train model
     model, training_time = train_model(model, X_train, y_train, config)
     
-    # Evaluate
+    # Evaluate SVM
     eval_results = evaluate_model(model, X_test, y_test, config)
     
-    # Save model and vectorizer
+    # Save SVM model and vectorizer
     save_model(model, vectorizer, config)
     
-    # Plot confusion matrix
+    # --- LOGISTIC REGRESSION (PEMBANDING) ---
+    print("\n" + "="*70)
+    print("TRAINING MODEL LOGISTIC REGRESSION (PEMBANDING)")
+    print("="*70)
+    from sklearn.linear_model import LogisticRegression
+    import time
+    
+    lr_model = LogisticRegression(random_state=config.RANDOM_STATE, class_weight='balanced', max_iter=1000)
+    
+    start_time = time.time()
+    lr_model.fit(X_resampled if 'X_resampled' in locals() else X_train, y_resampled if 'y_resampled' in locals() else y_train)
+    lr_training_time = time.time() - start_time
+    print(f"\n[INFO] Training Logistic Regression selesai dalam {lr_training_time:.2f} detik")
+    
+    # Evaluate Logistic Regression
+    lr_eval_results = evaluate_model(lr_model, X_test, y_test, config)
+    
+    # Save Logistic Regression model
+    joblib.dump(lr_model, config.LR_MODEL_FILE)
+    print(f"[INFO] Logistic Regression model tersimpan: {config.LR_MODEL_FILE}")
+    # ----------------------------------------
+    
+    # Plot confusion matrix for SVM
     plot_confusion_matrix(eval_results['confusion_matrix'], config)
     
-    # Plot metrics comparison
-    plot_metrics_comparison(eval_results)
+    # Plot metrics comparison (SVM vs LR)
+    plot_metrics_comparison(eval_results, lr_eval_results)
     
     # Generate report
-    generate_report(config, eval_results, training_time, model, vectorizer, config.REPORT_FILE)
+    generate_report(config, eval_results, lr_eval_results, training_time, lr_training_time, model, vectorizer, config.REPORT_FILE)
     
     # Initialize preprocessor & labeler
     preprocessor = None

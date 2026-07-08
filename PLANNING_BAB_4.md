@@ -1,4 +1,4 @@
-# 📝 Rencana Struktur BAB IV: HASIL DAN PEMBAHASAN
+# Rencana Struktur BAB IV: HASIL DAN PEMBAHASAN
 
 ## Analisis Sentimen Lagu "Arteri" - .FEAST Menggunakan Metode SVM
 

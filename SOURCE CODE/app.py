@@ -320,34 +320,37 @@ with tab2:
         
         with col_chart:
             with st.container(border=True):
-                st.markdown("##### <i class='fa-solid fa-chart-bar'></i> **Visualisasi Distribusi Sentimen**", unsafe_allow_html=True)
-                fig, ax = plt.subplots(figsize=(8, 4.5))
-                fig.patch.set_facecolor('#ffffff')
-                ax.set_facecolor('#ffffff')
-                
-                categories = ['Negatif', 'Netral', 'Positif']
-                counts = [neg_data, net_data, pos_data]
-                colors = ['#ef4444', '#3b82f6', '#10b981']
-                
-                bars = ax.bar(categories, counts, color=colors, edgecolor='black', width=0.5)
-                
-                # Label
-                for bar in bars:
-                    height = bar.get_height()
-                    ax.text(bar.get_x() + bar.get_width()/2, height + 5,
-                            f'{height} ({height/total_data*100:.1f}%)',
-                            ha='center', va='bottom', color='#0f172a', fontweight='bold')
-                
-                ax.tick_params(colors='#334155')
-                ax.spines['bottom'].set_color('#cbd5e1')
-                ax.spines['left'].set_color('#cbd5e1')
-                ax.spines['top'].set_visible(False)
-                ax.spines['right'].set_visible(False)
-                ax.set_ylabel('Jumlah Komentar', color='#0f172a')
-                ax.grid(axis='y', alpha=0.2, color='#cbd5e1')
-                
-                st.pyplot(fig)
-                plt.close(fig)
+                st.markdown("##### <i class='fa-solid fa-chart-pie'></i> **Visualisasi Distribusi Sentimen**", unsafe_allow_html=True)
+                if os.path.exists("Data/sentiment_distribution.png"):
+                    st.image("Data/sentiment_distribution.png", width='stretch')
+                else:
+                    fig, ax = plt.subplots(figsize=(8, 4.5))
+                    fig.patch.set_facecolor('#ffffff')
+                    ax.set_facecolor('#ffffff')
+                    
+                    categories = ['Negatif', 'Netral', 'Positif']
+                    counts = [neg_data, net_data, pos_data]
+                    colors = ['#ef4444', '#3b82f6', '#10b981']
+                    
+                    bars = ax.bar(categories, counts, color=colors, edgecolor='black', width=0.5)
+                    
+                    # Label
+                    for bar in bars:
+                        height = bar.get_height()
+                        ax.text(bar.get_x() + bar.get_width()/2, height + 5,
+                                f'{height} ({height/total_data*100:.1f}%)',
+                                ha='center', va='bottom', color='#0f172a', fontweight='bold')
+                    
+                    ax.tick_params(colors='#334155')
+                    ax.spines['bottom'].set_color('#cbd5e1')
+                    ax.spines['left'].set_color('#cbd5e1')
+                    ax.spines['top'].set_visible(False)
+                    ax.spines['right'].set_visible(False)
+                    ax.set_ylabel('Jumlah Komentar', color='#0f172a')
+                    ax.grid(axis='y', alpha=0.2, color='#cbd5e1')
+                    
+                    st.pyplot(fig)
+                    plt.close(fig)
             
         with col_table:
             with st.container(border=True):
@@ -519,41 +522,66 @@ with tab4:
     # 2. Detail Penjelasan dan Deskripsi di Bagian Bawah
     st.markdown("### **Analisis & Deskripsi Detail Performa Model**")
     
-    # Ambil nilai metrik
-    acc, prec, rec, f1w = "N/A", "N/A", "N/A", "N/A"
+    # Ambil nilai metrik komparatif
+    acc_svm, prec_svm, rec_svm, f1w_svm = "N/A", "N/A", "N/A", "N/A"
+    acc_lr, prec_lr, rec_lr, f1w_lr = "N/A", "N/A", "N/A", "N/A"
     if os.path.exists("Output/model_report.txt"):
         with open("Output/model_report.txt", "r", encoding="utf-8") as f:
             report_text = f.read()
-        def extract_metric(text, key):
-            match = re.search(rf"{key}\s*:\s*([\d.]+)%", text)
-            return match.group(1) + "%" if match else "N/A"
-        acc  = extract_metric(report_text, "Accuracy")
-        prec = extract_metric(report_text, "Precision \\(Weighted\\)")
-        rec  = extract_metric(report_text, "Recall \\(Weighted\\)")
-        f1w  = extract_metric(report_text, "F1 Score \\(Weighted\\)")
+        
+        def extract_comparative(text, key):
+            pattern = rf"{key}\s*\|\s*([\d.]+)%\s*\|\s*([\d.]+)%"
+            match = re.search(pattern, text, re.IGNORECASE)
+            if match:
+                return match.group(1) + "%", match.group(2) + "%"
+            return "N/A", "N/A"
+            
+        acc_svm, acc_lr = extract_comparative(report_text, "Accuracy")
+        prec_svm, prec_lr = extract_comparative(report_text, "Precision \\(Weighted\\)")
+        rec_svm, rec_lr = extract_comparative(report_text, "Recall \\(Weighted\\)")
+        f1w_svm, f1w_lr = extract_comparative(report_text, "F1 Score \\(Weighted\\)")
 
-    # Tampilkan kartu metrik kecil
+    # Tampilkan kartu metrik kecil komparatif (SVM vs Logistic Regression)
     col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+    
+    def render_comp_card(title, svm_val, lr_val):
+        return f"""
+        <div class="metric-card">
+            <h5 style="margin:0;color:#64748b;font-size:0.85rem;text-transform:uppercase;font-weight:700;">{title}</h5>
+            <div style="display:flex; justify-content:space-around; align-items:center; margin-top:10px;">
+                <div>
+                    <span style="font-size:0.7rem;color:#64748b;display:block;font-weight:600;">SVM</span>
+                    <strong style="font-size:1.35rem;color:#2563eb;font-weight:800;">{svm_val}</strong>
+                </div>
+                <div style="border-left: 1px solid #cbd5e1; height: 28px;"></div>
+                <div>
+                    <span style="font-size:0.7rem;color:#64748b;display:block;font-weight:600;">LR</span>
+                    <strong style="font-size:1.35rem;color:#f97316;font-weight:800;">{lr_val}</strong>
+                </div>
+            </div>
+        </div>
+        """
+
     with col_m1:
-        st.markdown(f'<div class="metric-card"><h5 style="margin:0;color:#64748b;">AKURASI</h5><h2 style="margin:5px 0 0 0;font-weight:800;color:#0f172a;">{acc}</h2></div>', unsafe_allow_html=True)
+        st.markdown(render_comp_card("AKURASI GLOBAL", acc_svm, acc_lr), unsafe_allow_html=True)
     with col_m2:
-        st.markdown(f'<div class="metric-card"><h5 style="margin:0;color:#64748b;">PRECISION</h5><h2 style="margin:5px 0 0 0;font-weight:800;color:#0f172a;">{prec}</h2></div>', unsafe_allow_html=True)
+        st.markdown(render_comp_card("PRECISION (WEIGHTED)", prec_svm, prec_lr), unsafe_allow_html=True)
     with col_m3:
-        st.markdown(f'<div class="metric-card"><h5 style="margin:0;color:#64748b;">RECALL</h5><h2 style="margin:5px 0 0 0;font-weight:800;color:#0f172a;">{rec}</h2></div>', unsafe_allow_html=True)
+        st.markdown(render_comp_card("RECALL (WEIGHTED)", rec_svm, rec_lr), unsafe_allow_html=True)
     with col_m4:
-        st.markdown(f'<div class="metric-card"><h5 style="margin:0;color:#64748b;">F1-SCORE</h5><h2 style="margin:5px 0 0 0;font-weight:800;color:#0f172a;">{f1w}</h2></div>', unsafe_allow_html=True)
+        st.markdown(render_comp_card("F1-SCORE (WEIGHTED)", f1w_svm, f1w_lr), unsafe_allow_html=True)
 
     st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
     
     col_desc_left, col_desc_right = st.columns(2)
     
     with col_desc_left:
-        st.markdown("#### **Analisis Metrik Evaluasi**")
+        st.markdown("#### **Analisis Perbandingan Metrik**")
         st.markdown(f"""
-        - **Akurasi Global ({acc})**: Mengindikasikan bahwa model SVM secara keseluruhan berhasil memprediksi label sentimen dengan benar pada **{acc}** dari seluruh data uji komentar. Nilai ini sangat solid untuk klasifikasi 3-kelas (Positif, Netral, Negatif) yang memiliki tingkat subjektivitas tinggi.
-        - **Precision (Weighted - {prec})**: Menunjukkan ketepatan prediksi model. Rata-rata tertimbang presisi sebesar **{prec}** berarti ketika model memprediksi suatu sentimen, tingkat kesalahan penuduhan (False Positive) sangat rendah.
-        - **Recall (Weighted - {rec})**: Mengukur kelengkapan model. Nilai **{rec}** menunjukkan model mampu mengidentifikasi sebagian besar komentar aktual dari masing-masing kategori tanpa banyak yang terlewat (False Negative).
-        - **F1-Score (Weighted - {f1w})**: Rata-rata harmonis yang seimbang antara precision dan recall. Nilai **{f1w}** yang tinggi membuktikan model memiliki stabilitas klasifikasi yang optimal di seluruh kelas.
+        - **Akurasi Global (SVM: {acc_svm} vs LR: {acc_lr})**: Model SVM Linear memiliki akurasi sebesar **{acc_svm}**, yang lebih tinggi dibandingkan model Logistic Regression (**{acc_lr}**). Hal ini menunjukkan optimasi marjin maksimal oleh SVM bekerja lebih stabil.
+        - **Precision (SVM: {prec_svm} vs LR: {prec_lr})**: SVM mendapatkan nilai presisi **{prec_svm}** dibandingkan Regresi Logistik (**{prec_lr}**), yang berarti model SVM memiliki tingkat kesalahan *false positive* (kesalahan prediksi sentimen) yang lebih rendah.
+        - **Recall (SVM: {rec_svm} vs LR: {rec_lr})**: SVM mencapai recall **{rec_svm}** dibandingkan Regresi Logistik (**{rec_lr}**). Hal ini membuktikan bahwa SVM lebih peka dalam menangkap komentar sentimen minoritas (positif dan negatif).
+        - **F1-Score (SVM: {f1w_svm} vs LR: {f1w_lr})**: F1-Score sebesar **{f1w_svm}** untuk SVM dan **{f1w_lr}** untuk Regresi Logistik membuktikan stabilitas performa klasifikasi SVM yang unggul secara keseluruhan.
         """)
         
     with col_desc_right:

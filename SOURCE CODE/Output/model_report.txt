@@ -1,9 +1,9 @@
 ======================================================================
-LAPORAN MODEL SVM ANALISIS SENTIMEN
+LAPORAN KOMPARASI MODEL SENTIMEN (SVM VS LOGISTIC REGRESSION)
 Lagu 'Arteri' - .FEAST
 ======================================================================
 
-Tanggal/Waktu: 2026-07-08 09:26:43
+Tanggal/Waktu: 2026-07-09 02:28:48
 Author: Rafi Maulana Firdaus (312210382)
 
 ----------------------------------------------------------------------
@@ -16,26 +16,35 @@ Max DF              : 0.95
 Vocabulary Size     : 5000
 
 ----------------------------------------------------------------------
-KONFIGURASI SVM
+KONFIGURASI MODEL SVM
 ----------------------------------------------------------------------
 (Best parameters dari GridSearchCV)
 Estimator__c        : 1.0
 Estimator__kernel   : linear
 Best CV Score       : 96.68%
-
-Training Time       : 15.58 seconds
-
-----------------------------------------------------------------------
-HASIL EVALUASI
-----------------------------------------------------------------------
-Accuracy            : 80.85%
-Precision (Weighted): 80.55%
-Recall (Weighted)   : 80.85%
-F1 Score (Macro)    : 73.57%
-F1 Score (Weighted) : 80.66%
+Training Time       : 8.20 seconds
 
 ----------------------------------------------------------------------
-CONFUSION MATRIX
+KONFIGURASI MODEL LOGISTIC REGRESSION
+----------------------------------------------------------------------
+Regularization      : L2 (Ridge)
+C                   : 1.0 (default)
+Max Iterations      : 1000
+Training Time       : 0.12 seconds
+
+----------------------------------------------------------------------
+PERBANDINGAN METRIK EVALUASI
+----------------------------------------------------------------------
+Metrik               | SVM (Linear)    | Logistic Reg.  
+----------------------------------------------------------------------
+Accuracy             |         80.85% |         79.15%
+Precision (Weighted) |         80.55% |         79.18%
+Recall (Weighted)    |         80.85% |         79.15%
+F1 Score (Macro)     |         73.57% |         72.41%
+F1 Score (Weighted)  |         80.66% |         79.14%
+
+----------------------------------------------------------------------
+CONFUSION MATRIX - SVM
 ----------------------------------------------------------------------
                 Predicted
               Neg  Net  Pos
@@ -44,9 +53,19 @@ Actual Neg     14    6    3
        Pos      3   16   42
 
 ----------------------------------------------------------------------
+CONFUSION MATRIX - LOGISTIC REGRESSION
+----------------------------------------------------------------------
+                Predicted
+              Neg  Net  Pos
+Actual Neg     15    5    3
+       Net      7  130   14
+       Pos      3   17   41
+
+----------------------------------------------------------------------
 FILE OUTPUT
 ----------------------------------------------------------------------
-Model               : Output/svm_sentiment_model.pkl
+SVM Model           : Output/svm_sentiment_model.pkl
+LR Model            : Output/logistic_regression_model.pkl
 Vectorizer          : Output/tfidf_vectorizer.pkl
 Report              : Output/model_report.txt
 
