@@ -6,47 +6,18 @@
 
 ## 5.1 Kesimpulan
 
-Berdasarkan serangkaian proses penelitian yang telah dilaksanakan — mulai dari pengumpulan data komentar YouTube, pemrosesan awal teks, pelabelan sentimen berbasis leksikon, ekstraksi fitur TF-IDF, pelatihan model SVM, hingga evaluasi komprehensif — terdapat tiga kesimpulan utama yang menjawab masing-masing rumusan masalah yang telah ditetapkan pada Bab I.
+Berdasarkan hasil penelitian analisis sentimen pada komentar YouTube lagu *".Feast – Arteri"* menggunakan algoritma *Support Vector Machine* (SVM) dan pembobotan TF-IDF, diperoleh kesimpulan sebagai berikut:
 
-### 5.1.1 Penerapan Algoritma SVM dengan Pembobotan TF-IDF
+1. **Penerapan Algoritma SVM**: Alur *pipeline* klasifikasi sentimen berhasil diimplementasikan melalui enam tahapan KDD (*Knowledge Discovery in Databases*). Dari total **1.531 komentar mentah** yang dikumpulkan, diperoleh **1.175 komentar bersih** setelah melalui pemrosesan awal (*preprocessing*). Data kemudian diberi label otomatis menggunakan metode *Lexicon-Based*, diekstraksi menggunakan fitur TF-IDF (unigram + bigram), dan dilatih menggunakan model SVM linear yang dioptimasi via GridSearchCV dengan penanganan *imbalance class* (Random Oversampling & class weight).
 
-Algoritma **Support Vector Machine (SVM)** berhasil diimplementasikan untuk mengklasifikasikan sentimen komentar publik pada video musik _".Feast – Arteri"_ melalui alur _pipeline_ enam tahap berbasis kerangka **Knowledge Discovery in Databases (KDD)**, yaitu:
+2. **Kinerja Model**: Model SVM menunjukkan performa yang sangat baik dan kompetitif untuk klasifikasi tiga kelas (*positive*, *neutral*, *negative*), dengan nilai **Akurasi 80,85%**, **Presisi 80,55%**, **Recall 80,85%**, dan **F1-Score 80,66%**. Model ini juga terbukti lebih unggul dibandingkan model pembanding *Logistic Regression* (selisih akurasi +1,70% dan F1-Score +1,52%), membuktikan ketangguhan prinsip *Maximal Margin Classifier* SVM dalam menangani data teks informal yang kompleks dan berisik (*noisy*).
 
-1. **Pengumpulan Data**: Sebanyak **1.531 komentar mentah** berhasil dikumpulkan dari kolom komentar YouTube menggunakan teknik _web scraping_ melalui pustaka `youtube-comment-downloader` dengan batas waktu penarikan data (_cutoff_) pada 8 Juli 2026.
-2. **Pemrosesan Awal (_Text Preprocessing_)**: Teks komentar dibersihkan dan dinormalisasi melalui tujuh tahapan berurutan — _case folding_, _data cleaning_ (regex), penghapusan emoji & emotikon, penyaringan spam & lirik lagu, normalisasi kata gaul menggunakan kamus alay 4.300+ entri, penghapusan _stopwords_ (dengan mempertahankan kata negasi), dan _stemming_ Bahasa Indonesia menggunakan PySastrawi. Proses ini menghasilkan **1.175 komentar bersih** yang siap diolah, setelah membuang 347 komentar yang teridentifikasi sebagai duplikat, spam, lirik lagu, atau terlalu pendek/panjang.
-3. **Pelabelan Sentimen**: Komentar bersih diberi label sentimen otomatis menggunakan metode berbasis kamus leksikon (_Lexicon-Based_) dengan ambang batas skor ±1. Distribusi kelas sentimen yang dihasilkan adalah: **Positif (26,2%)**, **Netral (64,2%)**, dan **Negatif (9,6%)**.
-4. **Ekstraksi Fitur TF-IDF**: Representasi vektor numerik dari data teks diperoleh menggunakan **TF-IDF** (_Term Frequency-Inverse Document Frequency_) dengan maksimal 5.000 fitur dan kombinasi _n-gram_ (unigram + bigram), menghasilkan matriks fitur berdimensi 745 dari data latih.
-5. **Pelatihan Model**: Model SVM dengan kernel _linear_ dilatih menggunakan 940 sampel data latih (80%) yang telah diseimbangkan kelasnya melalui _Random Oversampling_ dan pembobotan kelas (`class_weight='balanced'`). Hyperparameter optimal (`C=1.0`, `gamma='scale'`) diperoleh melalui pencarian otomatis **GridSearchCV** dengan skema validasi silang 5-lipat (_5-fold cross-validation_).
-6. **Evaluasi**: Model SVM dievaluasi menggunakan 235 sampel data uji (20%) yang belum pernah dilihat selama pelatihan, menggunakan metrik _Confusion Matrix_ (Akurasi, Presisi, Recall, dan F1-Score).
+3. **Analisis Sentimen Pendengar**: Analisis sentimen terhadap 1.175 komentar menunjukkan kecenderungan sebagai berikut:
+   - **Sentimen Netral mendominasi (64,2% / 754 komentar)**, yang sebagian besar berupa narasi pengalaman pribadi terkait *quarter-life crisis*, diskusi komparatif musik, serta kutipan lirik lagu.
+   - **Sentimen Positif sebesar 26,2% (308 komentar)**, yang merepresentasikan apresiasi pendengar terhadap kedalaman makna lirik dan kualitas aransemen lagu.
+   - **Sentimen Negatif sebesar 9,6% (113 komentar)**, yang umumnya dipicu oleh ketidakcocokan selera musik personal atau luapan emosi negatif akibat kenangan masa lalu, bukan penolakan terhadap kualitas karya.
 
-### 5.1.2 Kinerja Model SVM dalam Mengenali Pola Sentimen
-
-Model SVM yang dibangun menunjukkan kinerja yang **baik dan kompetitif** dalam mengklasifikasikan sentimen teks komentar tidak terstruktur berbahasa Indonesia informal. Hasil evaluasi kuantitatif menunjukkan:
-
-| Metrik Evaluasi                     |   Nilai    |
-| :---------------------------------- | :--------: |
-| **Akurasi (_Accuracy_)**            | **80,85%** |
-| **Presisi (_Precision_, Weighted)** | **80,55%** |
-| **Recall (Weighted)**               | **80,85%** |
-| **F1-Score (Weighted)**             | **80,66%** |
-
-Nilai akurasi **80,85%** berarti model berhasil mengklasifikasikan sekitar **190 dari 235 komentar** data uji dengan benar. Secara per kelas, model memiliki performa terbaik pada kelas **Netral** (F1-Score 0,87) karena dominasi data pada kelas ini, diikuti kelas **Positif** (F1-Score 0,71), dan kelas **Negatif** (F1-Score 0,62) yang tetap stabil berkat penerapan _Random Oversampling_.
-
-Sebagai validasi tambahan, model SVM yang diusulkan berhasil **mengungguli model pembanding Logistic Regression** di seluruh metrik evaluasi — dengan selisih Akurasi sebesar **+1,70%** dan F1-Score sebesar **+1,52%**. Hal ini membuktikan bahwa prinsip _Maximal Margin Classifier_ pada SVM lebih tangguh dalam menghadapi _noise_ linguistik dari teks informal komentar YouTube dibandingkan pendekatan probabilistik.
-
-Nilai akurasi 80,85% pada penelitian ini terbukti **kompetitif secara ilmiah** mengingat tingkat kesulitannya jauh lebih tinggi dibandingkan mayoritas penelitian terdahulu, yakni: menggunakan **tiga kelas sentimen** (bukan dua), domain data berupa komentar YouTube yang sangat informal dan penuh bahasa gaul, serta ukuran dataset yang lebih terbatas.
-
-### 5.1.3 Kecenderungan Dominasi Sentimen Pendengar Lagu "Arteri"
-
-Berdasarkan hasil klasifikasi model SVM terhadap 1.175 komentar, terdapat kecenderungan dominasi sentimen yang jelas dan memiliki makna sosiologis yang mendalam:
-
-- **Sentimen Netral mendominasi** dengan proporsi **64,2% (754 komentar)**. Temuan ini tidak mencerminkan ketidakpedulian pendengar, melainkan menggambarkan pola komunikasi khas di YouTube — komentar pendengar didominasi oleh curahan pengalaman hidup _quarter-life crisis_ yang bersifat naratif informatif, diskusi komparatif musikal dengan band _My Chemical Romance_ (MCR), serta kutipan dan interpretasi makna lirik tanpa penilaian evaluatif yang eksplisit. Fenomena ini juga diperkuat oleh **bias entitas nama tokoh**: nama vokalis _"Baskara"_ yang sering disebut dalam konteks apresiasi tidak terdeteksi sebagai kata sentimen positif oleh kamus leksikon, sehingga komentar apresiasi implisit ini terkategorikan sebagai Netral.
-
-- **Sentimen Positif berada di posisi kedua** dengan proporsi **26,2% (308 komentar)**. Kata-kata dominan seperti _"bagus"_, _"keren"_, _"relate"_, _"indah"_, dan _"masterpiece"_ menunjukkan apresiasi pendengar yang tinggi terhadap kualitas musikalitas, kedalaman lirik, dan relevansi personal narasi _quarter-life crisis_ yang diangkat lagu "Arteri".
-
-- **Sentimen Negatif memiliki proporsi paling kecil** yakni **9,6% (113 komentar)**. Kritik yang ada umumnya berupa ketidakcocokan selera musikal atau ekspresi emosi negatif yang dipicu oleh kenangan personal yang menyakitkan akibat mendengarkan lagu ini, bukan sebuah penolakan terhadap kualitas lagu secara objektif.
-
-Secara keseluruhan, temuan ini menunjukkan bahwa lagu _"Arteri"_ oleh **.FEAST** **diterima secara sangat positif dan memberi dampak emosional yang signifikan** oleh mayoritas pendengar di YouTube. Respons publik yang didominasi oleh narasi personal dan apresiasi mencerminkan keberhasilan lagu ini dalam membangun koneksi emosional yang autentik dengan fenomena _quarter-life crisis_ yang dialami oleh generasi muda Indonesia.
+Secara keseluruhan, lagu *"Arteri"* diterima secara sangat baik oleh audiens dan berhasil membangun kedekatan emosional yang kuat dengan generasi muda dalam menghadapi fase *quarter-life crisis*.
 
 ---
 

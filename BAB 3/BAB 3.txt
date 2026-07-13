@@ -1,0 +1,107 @@
+BAB III
+METODE PENELITIAN
+3.1Jenis dan Pendekatan Penelitian
+Penelitian ini menggunakan pendekatan kuantitatif dengan jenis penelitian eksperimen komputasi. Pendekatan kuantitatif digunakan karena seluruh hasil analisis diukur dan dievaluasi menggunakan data numerik yang dikumpulkan secara objektif dari proses ekstraksi fitur teks. Metode ini bersifat deskriptif-kuantitatif, dengan fokus utama pada evaluasi ketepatan model dalam mengklasifikasikan sentimen serta menggambarkan tren persepsi pendengar lagu "Arteri" berdasarkan distribusi kelas sentimen yang dihasilkan.
+
+Algoritma yang digunakan adalah SVM, sebuah algoritma supervised learning yang bekerja dengan prinsip pencarian hyperplane pemisah terbaik (best separating hyperplane) untuk memisahkan kelas data sentimen dengan margin yang maksimal.
+
+3.2Tahapan Penelitian
+Sebuah alur desain penelitian dibuat untuk memastikan penelitian ini berjalan secara sistematis, terarah, dan dapat dipertanggungjawabkan. Tahapan ini mencakup seluruh proses komputasi, mulai dari proses pengadaan data mentah hingga penarikan kesimpulan akhir dari kinerja algoritma.
+
+1
+Gambar 3.1 Alur Tahapan Penelitain
+Gambar 3.1 Alur Tahapan Penelitain
+3.3Desain Penelitian
+Desain penelitian ini disesuaikan dengan kerangka kerja Knowledge KDD, yang memproses data teks dalam tiga blok tahapan terintegrasi:
+
+Blok Input: Pengambilan data komentar mentah dari kolom komentar YouTube melalui teknik web scraping.
+Blok Proses: Preprocessing teks (pembersihan, normalisasi, penghapusan stopwords, stemming), pembobotan kata dengan TF-IDF, dan pelatihan model SVM.
+2
+Blok Output: Evaluasi kinerja model menggunakan Confusion Matrix (Akurasi, Presisi, Recall, F1-Score) dan identifikasi tren sentimen dominan pendengar.
+3.4Variabel Penelitian
+Dalam eksperimen komputasi ini, variabel penelitian didefinisikan sebagai sifat atau atribut objek penelitian yang memiliki variasi tertentu yang ditetapkan untuk diperiksa dan diambil kesimpulan tentangnya. Dua kategori variabel yang digunakan dalam penelitian ini adalah variabel independen (X) dan variabel dependen (Y).
+
+3.4.1Variabel Independen (X)
+Variabel independen adalah variabel yang mengubah atau menimbulkan variabel dependen. Variabel independen dalam penelitian ini adalah fitur teks komentar. Variabel ini berasal dari data tekstual mentah yang diambil dari kolom komentar video musik "Arteri" di YouTube. Sebelum diproses oleh model, variabel ini mengalami perubahan melalui tahap preprocessing dan pembobotan TF-IDF. Algoritma akan menggunakan nilai bobotnya untuk mempelajari pola setiap kata (term) yang berbeda dalam komentar tersebut.
+
+3.4.2Variabel Dependen (Y)
+Kelas sentimen adalah label kategori output yang diprediksi oleh model SVM berdasarkan fitur teks. Kinerja Model untuk atau adalah nilai yang menunjukkan seberapa baik algoritma berhasil dalam klasifikasi. Akurasi, Presisi, Recall, dan Skor F1 adalah metrik yang menunjukkan nilai ini. Tiga kelas terdiri dari kelas ini:
+
+Positif untuk komentar yang menunjukkan dukungan, penghargaan, atau dorongan emosional.
+Negatif untuk komentar yang mengandung kritik tajam, hujatan, atau ketidaksukaan.
+3
+Komentar yang tidak memihak atau tidak mengandung emosi yang jelas tidak positif.
+3.5Sumber dan Jenis Data
+Penelitian ini menggunakan data sekunder yang diperoleh secara tidak langsung melalui media perantara dan tersedia secara publik. Teks tidak terstruktur, yang mengandung kritik, pendapat, dan tanggapan audiens, merupakan sumber data. Kolom komentar video musik resmi sebelum di olah mengumpulkan total 1.449 data komentar .Feast Arteri, yang diunggah ke kanal YouTube resmi. Data utama untuk studi ini berasal dari teks komentar .Feast yang menggunakan berbagai gaya bahasa, termasuk bahasa Indonesia baku, bahasa informal (slang), dan majas sarkasme, menunjukkan perasaan pendengar terhadap masalah yang diangkat dalam lagu adalah ciri utama dataset ini.
+
+3.6Teknik Pengumpulan Data
+Untuk pengumpulan data dalam penelitian ini, metode observasi non-partisipasi dengan web scraping digunakan. Teknik ini memungkinkan pengumpulan data dalam jumlah besar dari platform digital tanpa perlu berinteraksi langsung dengan subjek (pendengar). Ini adalah prosedur sistematis yang digunakan untuk mengumpulkan informasi.
+
+3.6.1Proses dan Hasil Scraping Data Mentah
+Data komentar diperoleh melalui teknik web scraping pada video musik resmi lagu "Arteri" oleh .Feast di platform YouTube. Proses pengambilan data dilakukan pada tanggal 18 Januari 2026 menggunakan pustaka Python youtube comment downloader. Pengambilan data dibatasi (cutoff) pada tanggal tersebut guna menjaga konsistensi dataset dan menghindari bias akibat perubahan jumlah komentar yang dinamis di masa mendatang.
+
+Pada tahap awal, proses scraping dilakukan untuk menarik seluruh komentar yang tersedia secara publik pada kolom komentar video tersebut. Dari proses pengambilan data otomatis ini, berhasil dikumpulkan sebanyak 1.449 data
+
+4
+komentar mentah. Data mentah ini masih bersifat kotor, di mana terdapat banyak komentar yang hanya berisi rangkaian emoji tanpa teks, komentar yang berulang (spam), hingga komentar yang menggunakan bahasa asing atau bahasa yang tidak dapat diidentifikasi maknanya untuk kebutuhan analisis sentimen. Seluruh data mentah tersebut disimpan dalam format file .CSV untuk kemudian masuk ke tahap seleksi.
+
+3.6.2Validasi dan Finalisasi Dataset
+Setelah data mentah dikumpulkan, tahap validasi data dilakukan untuk menentukan kelayakan komentar yang akan diolah lebih lanjut oleh model SVM. Ini dilakukan dengan kriteria yang mengeluarkan data yang tidak memenuhi syarat, seperti komentar yang kosong, komentar yang hanya terdiri dari simbol atau angka, dan komentar duplikat.
+
+Hasil validasi menunjukkan bahwa dari 1.449 data awal, 1.059 data komentar yang valid dan siap untuk diproses. Sebanyak 390 data komentar dinyatakan tidak layak karena tidak memiliki informasi yang cukup untuk mengklasifikasikan polanya. Dataset terakhir berjumlah 1.059, yang merupakan fokus penelitian, akan melewati tahap preprocessing teks dan pembobotan fitur menggunakan TF-IDF.
+
+3.7Instrumen Penelitian
+Perangkat keras dan perangkat lunak yang digunakan untuk mengumpulkan, memproses, dan menganalisis data adalah instrumen penelitian dalam penelitian eksperimen komputasi ini. Spesifikasi alat yang digunakan, misalnya, adalah sebagai berikut:
+
+3.7.1Perangkat Keras (Hardware)
+Seluruh proses komputasi dijalankan oleh perangkat keras. Perangkat keras yang digunakan dalam penelitian ini adalah sebagai berikut:
+
+Jenis Perangkat: Personal Computer (PC)
+5
+Prosesor (CPU): AMD Ryzen 5 2600.
+Memori (RAM): 16 GB untuk kelancaran pengolahan dataframe.
+Penyimpanan: SSD untuk menyimpan dataset dan model.
+Koneksi Internet menggunakan LAN WiFi.
+3.7.2Perangkat Lunak (Software)
+Untuk membuat model klasifikasi sentimen, lingkungan kerja dan alat pemrograman digunakan. Perangkat lunak yang digunakan termasuk:
+
+Sistem Operasi: Windows 11.
+Bahasa Pemrograman: Python, dipilih karena memiliki dukungan pustaka yang luas untuk Data Science dan Machine Learning.
+Lingkungan Pengembangan (IDE): AntiGravity (untuk penulisan dan eksekusi kode program secara interaktif).
+Pustaka Pendukung (Libraries):
+Pandas digunakan untuk manipulasi dan analisis data tabular (format DataFrame).
+NLTK / Sastrawi untuk proses text preprocessing bahasa Indonesia (seperti stemming dan stopword removal).
+Scikit-learn pustaka utama untuk implementasi algoritma TF-IDF dan SVM serta perhitungan metrik evaluasi.
+Matplotlib / Seaborn untuk visualisasi data dan hasil evaluasi (Confusion Matrix).
+
+3.8Teknik Analisis Data
+Penelitian ini menganalisis data melalui pendekatan pengajaran mesin dan dilakukan melalui beberapa tahapan sistematis. Tujuannya adalah untuk membuat model klasifikasi yang tepat dari data teks komentar yang belum diproses. Berikut ini adalah langkah-langkah yang digunakan untuk menganalisis data:
+
+3.8.1Text Processing
+6
+Tahap awal analisis adalah pra-pemrosesan data mentah, juga dikenal sebagai data mentah, yang dilakukan untuk menghilangkan gangguan dan menyeragamkan format data. Proses yang dilakukan meliputi:
+
+Cleaning: Membersihkan data dari komponen yang tidak relevan seperti URL, username, tanda baca, angka, dan emoji.
+Case Folding: Mengubah seluruh huruf menjadi huruf kecil (lowercase).
+Tokenizing: Memecah kalimat menjadi potongan kata per kata (token).
+Stopword Removal: Menghapus kata-kata umum yang sering muncul namun tidak memiliki makna sentimen (seperti "dan", "atau", "yang") menggunakan kamus stoplist bahasa Indonesia.
+Stemming: Mengubah kata berimbuhan menjadi kata dasar menggunakan algoritma Sastrawi untuk mereduksi variasi kata.
+3.8.2Pembobotan Kata (Feature Extraction)
+Metode TF-IDF digunakan untuk mengekstraksi fitur setelah data dibersihkan. Dengan metode ini, data teks dapat diubah menjadi representasi vektor. TFG-IDF memberikan bobot tinggi pada kata-kata tertentu yang menunjukkan sentimen tertentu dan bobot rendah pada kata-kata yang terlalu umum untuk membantu algoritma membedakan antar kelas.
+
+3.8.3Pembagian Data (Data Splitting)
+Dataset yang telah berbentuk vektor kemudian dibagi menjadi dua bagian, yaitu:
+
+Data Latih (Training Set) digunakan untuk melatih model SVM agar mempelajari pola hubungan antara fitur kata dengan label sentimen. Proporsi yang digunakan biasanya sebesar 80% dari total data.
+Data Uji (Testing Set) digunakan untuk menguji kinerja model yang telah dilatih pada data baru yang belum pernah dilihat sebelumnya. Proporsi yang digunakan sebesar 20% dari total data.
+3.8.4Klasifikasi dengan SVM
+7
+Pada tahap ini, algoritma SVM diterapkan pada data latih untuk membangun model klasifikasi. SVM memetakan data ke dalam ruang vektor berdimensi tinggi dan menemukan hyperplane (garis pemisah) optimal dengan margin terbesar antara kelas sentimen Positif, Negatif, dan Netral. Kernel yang digunakan, seperti kernel linear atau RBF, dapat menangani pola data terpisah secara linear dan non-linear.
+
+3.8.5Evaluasi Model
+Pada langkah terakhir, metode Matrix Confusion akan digunakan untuk menilai kinerja model. Empat metrik utama digunakan untuk mengevaluasi kinerja model. Mereka akan membandingkan prediksi yang dibuat pada data uji dengan label sebenarnya.
+
+Akurasi (Accuracy) seberapa sering model menebak dengan benar secara keseluruhan.
+Presisi (Precision) tingkat ketepatan prediksi positif model.
+Recall untuk seberapa banyak data positif sebenarnya yang berhasil dikenali model.
+F1-Score rata-rata harmonis antara presisi dan recall, yang menjadi acuan utama jika terdapat ketimpangan jumlah data antar kelas.
