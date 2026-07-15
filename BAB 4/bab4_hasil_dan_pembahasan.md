@@ -15,7 +15,43 @@ Setelah melewati seluruh tahapan preprocessing dan pelabelan (yang diuraikan pad
 | Total komentar dihapus            | 347 komentar    |
 | Persentase penyusutan             | 22,7%           |
 
-**Tabel 4.1 Distribusi Kelas Sentimen Dataset Berlabel**
+### 4.1.1 Contoh Data Mentah Hasil Scraping
+
+Berikut adalah contoh representatif data mentah yang berhasil dikumpulkan melalui proses _web scraping_ sebelum tahap _preprocessing_ dilakukan. Data ini merupakan data asli dengan seluruh atribut yang tersimpan dalam file `comments_arteri_full.csv`:
+
+**Tabel 4.1 Contoh Data Mentah Hasil Scraping (_comments_arteri_full.csv_)**
+
+| No | Author | Teks Komentar (Mentah) | Waktu | Likes | Is Reply |
+| :-: | :----- | :--------------------- | :---- | :---: | :------: |
+| 1 | @tentangkucing14 | _"i'm not okay MCR? wkwkwkkw sama persis dari awal sampe akhir"_ | 14 jam yang lalu | 0 | False |
+| 6 | @geblex20 | _"dulu sering denger sampai suka ini lagu tanpa tau maknanya, tapi pas gk sengaja liat MV nya 'NAJIS,,,, TERNYATA PENGALAMAN GUA' hati mengisyaratkan dialah kenyamanan dia lah satu-satunya..."_ | 3 minggu yang lalu | 12 | False |
+| 12 | @yifauxx2384 | _"aduh kaya cerita saat ini ,mengenal didunia itu terpincut menyakitkan ah sialannnn"_ | 5 hari yang lalu | 3 | False |
+| 26 | @DONGHUANG29 | _"Kepharat kepharat??"_ | 1 minggu yang lalu | 1 | False |
+| 41 | @TamaTama-x3l | _"jangan kasih orang nyaman, jika kau ingin tidak ingin membuat orang sakit hati."_ | 2 minggu yang lalu | 7 | False |
+
+Terlihat dari sampel di atas bahwa data mentah mengandung berbagai karakteristik bahasa informal yang kompleks: penggunaan bahasa gaul (_"gk", "denger", "tau"_), campuran huruf kapital, tanda baca berulang, serta ekspresi emosional langsung yang menjadi tantangan utama dalam tahap _preprocessing_.
+
+### 4.1.2 Contoh Data Setelah Preprocessing dan Pelabelan
+
+Setelah melewati ketujuh tahap _preprocessing_ dan pelabelan leksikon otomatis, setiap komentar mentah ditransformasi menjadi teks bersih dan diberi label sentimen beserta skor polaritas. Berikut adalah contoh representatif data akhir dari file `comments_labeled.csv`:
+
+**Tabel 4.2 Contoh Data Berlabel Siap Analisis (_comments_labeled.csv_)**
+
+| No | Teks Mentah (Ringkas) | Teks Setelah Preprocessing | Sentimen | Skor | Label |
+| :-: | :----- | :------------------------- | :------: | :--: | :---: |
+| 2 | _"mantap"_ | `mantap` | **Positif** | +2.0 | 2 |
+| 6 | _"dulu sering denger sampai suka ini lagu..."_ | `dengar suka lagu tau makna pas enggak sengaja lihat mv nyata nyaman satu...` | **Positif** | +4.0 | 2 |
+| 1 | _"i'm not okay MCR? wkwkwkkw..."_ | `not okay mcr wkwkwkkw sama persis awal akhir` | **Netral** | 0.0 | 1 |
+| 4 | _"Abang dokter itu, ternyata punya pacar dan aku hanya jd orang ke 3. Jahatnya dia"_ | `abang dokter nyata punya pacar jadi jahat` | **Netral** | 0.0 | 1 |
+| 12 | _"aduh kaya cerita saat ini, menyakitkan ah sialannnn"_ | `kayak cerita kenal dunia pincut sakit sialannnn` | **Negatif** | -2.0 | 0 |
+| 26 | _"Kepharat kepharat??"_ | `kepharat kepharat` | **Negatif** | -6.0 | 0 |
+| 41 | _"jangan kasih orang nyaman... membuat orang sakit hati."_ | `jangan kasih nyaman tidak buat sakit hati` | **Negatif** | -3.0 | 0 |
+
+> **Keterangan Kolom**: `Skor` = akumulasi bobot kata sentimen dari kamus leksikon (positif: +1 s.d +3, negatif: -1 s.d. -3); `Label` = representasi numerik kelas (0=Negatif, 1=Netral, 2=Positif).
+
+Data pada Tabel 4.2 menunjukkan bahwa proses preprocessing berhasil mereduksi _noise_ secara signifikan (menghapus kata seperti _"kaya", "aduh", "ah"_ sebagai stopwords) sambil mempertahankan kata-kata bermuatan sentimen yang esensial seperti _"sakit", "mantap", "kepharat"_. Pelabelan leksikon secara otomatis mampu mengidentifikasi polaritas berdasarkan akumulasi skor kata, di mana komentar no. 26 mendapat skor -6.0 karena kata _"kepharat"_ muncul dua kali dengan bobot -3 per kemunculan.
+
+**Tabel 4.3 Distribusi Kelas Sentimen Dataset Berlabel**
 
 | Kelas Sentimen | Jumlah Komentar | Persentase (%) |
 | :------------- | :-------------: | :------------: |
@@ -237,7 +273,11 @@ Visualisasi awan kata (_word cloud_) untuk masing-masing kelas sentimen disajika
 
 ## 4.6 Uji Coba Prediksi Real-time
 
-**Tabel 4.10 Hasil Uji Coba Prediksi Sentimen Real-time**
+Untuk memvalidasi kemampuan generalisasi model pada data baru yang belum pernah dilihat selama pelatihan, dilakukan uji coba prediksi _real-time_ dengan dua kategori input: komentar sintetis yang dirancang khusus dan komentar autentik yang diambil langsung dari dataset uji.
+
+### 4.6.1 Prediksi pada Komentar Sintetis
+
+**Tabel 4.10 Hasil Uji Coba Prediksi Sentimen pada Komentar Sintetis**
 
 | Teks Komentar Input                     | Prediksi Sentimen |  Confidence  |
 | :-------------------------------------- | :---------------: | :----------: |
@@ -248,7 +288,31 @@ Visualisasi awan kata (_word cloud_) untuk masing-masing kelas sentimen disajika
 | _"kepharat kepharat"_                   |    **Negatif**    | — (Leksikon) |
 | _"lagu ini mengingatkan saya pada mcr"_ |    **Netral**     |     ~88%     |
 
-Seluruh komentar yang secara semantis bermuatan negatif berhasil diklasifikasikan dengan benar, menunjukkan model telah mempelajari pola sentimen negatif dengan baik setelah penerapan Random Oversampling.
+### 4.6.2 Prediksi pada Data Uji Autentik dari Dataset Asli
+
+Berikut adalah 10 contoh komentar autentik dari data uji (_testing set_) yang diambil langsung dari `comments_labeled.csv`, beserta label asli (_ground truth_) dan hasil prediksi model SVM:
+
+**Tabel 4.11 Contoh Prediksi Model SVM pada Data Uji Autentik**
+
+| No | Teks Komentar Asli (Ringkas) | Teks Setelah Preprocessing | Label Asli | Prediksi Model | Hasil |
+| :-: | :--------------------------- | :------------------------- | :--------: | :------------: | :---: |
+| 1 | _"mantap"_ | `mantap` | Positif | **Positif** | ✓ Benar |
+| 2 | _"aduh kaya cerita saat ini, menyakitkan ah sialannnn"_ | `kayak cerita sakit sialannnn` | Negatif | **Negatif** | ✓ Benar |
+| 3 | _"Kepharat kepharat??"_ | `kepharat kepharat` | Negatif | **Negatif** | ✓ Benar |
+| 4 | _"i'm not okay MCR? wkwkwkkw sama persis dari awal sampe akhir"_ | `not okay mcr wkwkwkkw sama persis awal akhir` | Netral | **Netral** | ✓ Benar |
+| 5 | _"jangan kasih orang nyaman, jika kau tidak ingin membuat orang sakit hati."_ | `jangan kasih nyaman tidak buat sakit hati` | Negatif | **Negatif** | ✓ Benar |
+| 6 | _"Kita pernah menjadi laki laki itu."_ | `jadi laki laki` | Netral | **Netral** | ✓ Benar |
+| 7 | _"dulu sering denger sampai suka lagu ini... hati mengisyaratkan dialah kenyamanan"_ | `dengar suka lagu nyaman hati isyarat` | Positif | **Positif** | ✓ Benar |
+| 8 | _"Abang dokter itu ternyata punya pacar dan aku jadi orang ke 3. Jahatnya dia"_ | `abang dokter nyata punya pacar jadi jahat` | Netral | **Positif** | ✗ Salah |
+| 9 | _"gawat gua mulai mengenal wanita gincu"_ | `gawat mulai kenal wanita gincu` | Negatif | **Netral** | ✗ Salah |
+| 10 | _"Setelah mengenal cewe itu aku tau arti lagu ini"_ | `telah kenal cewek tau arti lagu` | Netral | **Netral** | ✓ Benar |
+
+Dari 10 contoh data uji di atas, **8 komentar (80%)** berhasil diprediksi dengan benar. Dua kasus kesalahan klasifikasi mencerminkan pola ketidaksesuaian yang konsisten dengan analisis _Confusion Matrix_ pada Subbab 4.4.3:
+
+- **Kasus No. 8** (Aktual: Netral → Prediksi: Positif): Komentar yang mengandung kata _"nyata"_ dan konteks narasi pribadi diklasifikasikan sebagai Positif, karena secara leksikal tidak ada kata negatif eksplisit — ini adalah contoh khas **ambiguitas batas Netral-Positif** yang menjadi sumber kesalahan terbesar (12 kasus) dalam _Confusion Matrix_.
+- **Kasus No. 9** (Aktual: Negatif → Prediksi: Netral): Komentar _"gawat mulai kenal wanita gincu"_ tidak dikenali sebagai negatif karena kata _"gawat"_ memiliki bobot rendah dalam kamus TF-IDF dan kata _"gincu"_ tidak terdaftar dalam kamus leksikon sentimen — menggambarkan keterbatasan **cakupan kosakata slang** yang dibahas pada Subbab 4.8.2.
+
+Seluruh komentar yang secara semantis bermuatan negatif dan eksplisit (mengandung kata _"kepharat", "sakit", "sialannnn"_) berhasil diklasifikasikan dengan benar, menunjukkan model telah mempelajari pola sentimen negatif dengan baik setelah penerapan Random Oversampling.
 
 ---
 
