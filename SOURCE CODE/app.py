@@ -152,7 +152,7 @@ df_labeled = load_labeled_data()
 
 # Sidebar
 with st.sidebar:
-    st.image("https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3", width='stretch')
+    st.image("https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3", use_container_width=True)
     st.markdown("### <i class=\"fa-solid fa-graduation-cap\"></i> INFO SKRIPSI", unsafe_allow_html=True)
     st.markdown("""
     * **<i class="fa-solid fa-user"></i> Peneliti**: Rafi Maulana Firdaus
@@ -322,7 +322,7 @@ with tab2:
             with st.container(border=True):
                 st.markdown("##### <i class='fa-solid fa-chart-pie'></i> **Visualisasi Distribusi Sentimen**", unsafe_allow_html=True)
                 if os.path.exists("Data/sentiment_distribution.png"):
-                    st.image("Data/sentiment_distribution.png", width='stretch')
+                    st.image("Data/sentiment_distribution.png", use_container_width=True)
                 else:
                     fig, ax = plt.subplots(figsize=(8, 4.5))
                     fig.patch.set_facecolor('#ffffff')
@@ -505,7 +505,7 @@ with tab4:
         with st.container(border=True):
             st.markdown("##### <i class='fa-solid fa-table-cells'></i> **Visual Confusion Matrix**", unsafe_allow_html=True)
             if os.path.exists("Output/confusion_matrix.png"):
-                st.image("Output/confusion_matrix.png", width='stretch')
+                st.image("Output/confusion_matrix.png", use_container_width=True)
             else:
                 st.info("Confusion matrix plot belum tersedia.")
                 
@@ -513,7 +513,7 @@ with tab4:
         with st.container(border=True):
             st.markdown("##### <i class='fa-solid fa-chart-line'></i> **Visual Perbandingan Metrik**", unsafe_allow_html=True)
             if os.path.exists("Output/metrics_comparison.png"):
-                st.image("Output/metrics_comparison.png", width='stretch')
+                st.image("Output/metrics_comparison.png", use_container_width=True)
             else:
                 st.info("Grafik metrik perbandingan belum tersedia.")
                 
