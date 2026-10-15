@@ -293,11 +293,32 @@ Cabang kecerdasan buatan yang disebut NLP berkonsentrasi pada cara komputer dan 
 Tahap Preprocessing Text adalah transformasi data teks mentah menjadi format terstruktur yang bersih sehingga algoritma mesin dapat memprosesnya. Proses ini dilakukan secara berurutan, termasuk membersihkan (menghilangkan suara seperti simbol dan emoji), memotong case, tokenizing, menghilangkan stopword, dan stemming untuk mengembalikan kata ke bentuk aslinya. Text preprocessing adalah tahapan di mana data akan disiapkan serta di proses agar menjadi data yang siap untuk dianalisis [29]. Tujuan dari proses ini adalah untuk mengurangi ukuran fitur dan ambiguitas yang ada pada kumpulan komentar YouTube. Dengan demikian, proses ini meningkatkan kemanjuran dan akurasi model dalam mengidentifikasi pola sentimen.
 
 2.2.8	Term Frequency-Inverse Document Frequency (TF-IDF)
-TF-IDF adalah metode pembobotan yang digunakan untuk mengubah data teks komentar menjadi vektor numerik dengan menilai seberapa penting suatu kata terhadap dokumen dalam kumpulan korpus. suatu cara pemberian bobot hubungan suatu kata (term) terhadap  Dokumen [30]. Metode ini bekerja dengan menggabungkan dua konsep nilai:
-1.	Term Frequency (TF) Menghitung frekuensi kemunculan kata t dalam dokumen.
- 
-2.	Inverse Document Frequency (IDF) adalah alat yang digunakan untuk menghitung nilai kelangkaan kata. Dengan semakin sedikit kata yang muncul dalam seluruh koleksi dokumen (N), semakin berat kata tersebut, yang dirumuskan sebagai:
- 
+	Term Frequency-Inverse Document Frequency (TF-IDF) adalah metode pembobotan kata yang digunakan untuk mengukur seberapa penting atau relevan suatu kata (term) di dalam suatu dokumen tertentu dibandingkan dengan seluruh kumpulan dokumen (korpus) [30]. Metode ini bekerja dengan menggabungkan dua konsep nilai:
+	1. Term Frequency (TF): Mengukur frekuensi kemunculan suatu kata (t) dalam suatu dokumen (d). Asumsinya adalah semakin sering suatu kata muncul di dalam dokumen, maka tingkat kepentingannya semakin tinggi. Rumus TF dasar adalah:
+	   TF(t, d) = (Jumlah kemunculan kata t dalam dokumen d) / (Total kata dalam dokumen d)
+	2. Inverse Document Frequency (IDF): Mengukur keunikan atau kelangkaan suatu kata di seluruh koleksi dokumen (korpus). Kata-kata umum (seperti "dan", "yang", "di") yang muncul di hampir semua dokumen akan memiliki nilai IDF yang rendah (mendekati 0) karena tidak informatif untuk membedakan dokumen. Rumus IDF adalah:
+	   IDF(t) = log(N / DF(t))
+	   Di mana N merupakan total dokumen dalam korpus, dan DF(t) adalah jumlah dokumen yang mengandung kata t.
+	 Bobot akhir TF-IDF diperoleh dari perkalian antara TF dan IDF:
+	   TF-IDF(t, d) = TF(t, d) * IDF(t)
+
+	Sebagai contoh pembacaan dan pembobotan nilai TF-IDF dalam sebuah dokumen, perhatikan ilustrasi berikut:
+	Misalkan kita memiliki korpus yang berisi 100 dokumen ulasan musik (N = 100). Kita ingin menganalisis bobot dua kata, yaitu kata "Arteri" dan kata "Lagu", pada sebuah dokumen spesifik yaitu "Dokumen A". 
+	Dokumen A memiliki total 50 kata. Di dalam Dokumen A, kata "Arteri" muncul sebanyak 5 kali dan kata "Lagu" muncul sebanyak 10 kali. Berdasarkan pemeriksaan di seluruh korpus, kata "Arteri" hanya muncul di 5 dokumen, sedangkan kata "Lagu" muncul di seluruh 100 dokumen.
+
+	Langkah perhitungan dan interpretasi nilainya adalah sebagai berikut:
+	a. Perhitungan kata "Arteri":
+	   * TF("Arteri", A) = 5 / 50 = 0.1
+	   * IDF("Arteri") = log(100 / 5) = log(20) ≈ 1.301
+	   * TF-IDF("Arteri", A) = 0.1 * 1.301 = 0.1301
+	b. Perhitungan kata "Lagu":
+	   * TF("Lagu", A) = 10 / 50 = 0.2
+	   * IDF("Lagu") = log(100 / 100) = log(1) = 0
+	   * TF-IDF("Lagu", A) = 0.2 * 0 = 0
+
+	Cara membaca dan menginterpretasikan hasil pembobotan di atas adalah:
+	* Kata "Arteri" mendapatkan bobot TF-IDF sebesar 0.1301. Nilai ini menunjukkan bahwa kata "Arteri" memiliki tingkat kepentingan yang tinggi dan merupakan salah satu kata kunci unik yang merepresentasikan ciri khas isi dari Dokumen A. Meskipun frekuensi kemunculannya sedang, keunikan kata ini di dokumen lain membuatnya sangat informatif bagi algoritma klasifikasi.
+	* Kata "Lagu" mendapatkan bobot TF-IDF sebesar 0. Nilai ini menunjukkan bahwa meskipun kata "Lagu" muncul sangat sering di Dokumen A (dua kali lebih sering dibanding kata "Arteri"), kata tersebut sama sekali tidak penting atau tidak informatif untuk membedakan Dokumen A dengan dokumen lain, karena kata tersebut bersifat terlalu umum dan muncul di seluruh dokumen dalam korpus.
 
 2.2.9	Support Vector Machine (SVM)
 Salah satu tujuan algoritma SVM adalah untuk menemukan bidang pemisah (hyperplane) terbaik dalam ruang besar yang memisahkan data antar kelas sentimen (positif, negatif, atau netral). Ide utama SVM adalah untuk memaksimalkan margin, yaitu jarak terdekat antara hyperplane dan titik data masing-masing kelas. support vector machine bekerja dengan mencari hyperplane terbaik untuk membagi kelas, naive bayes bekerja dengan cara mencari nilai probabilitas bersyarat terbesar dari masing-masing kelas [31]. Persamaan untuk garis hyperplane adalah:
